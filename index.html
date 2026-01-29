@@ -3,191 +3,137 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>CO2-Play — Field Calculator</title>
+  <title>CO2-Play — Direct Save</title>
   <meta name="theme-color" content="#0b1220"/>
   <style>
-    :root{
-      --bg:#070b16; --card:#0f1a33; --line:rgba(255,255,255,.10);
-      --text:#eaf1ff; --muted:#a7b8de;
-      --blue:#3b82f6; --green:#22c55e; --orange:#f97316; --pink:#ec4899; --red:#ef4444;
-      --shadow:0 18px 48px rgba(0,0,0,.35); --r:18px;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-    }
+    :root{--bg:#070b16;--card:#0f1a33;--line:rgba(255,255,255,.10);--text:#eaf1ff;--muted:#a7b8de;
+      --blue:#3b82f6;--green:#22c55e;--orange:#f97316;--pink:#ec4899;--red:#ef4444;--shadow:0 18px 48px rgba(0,0,0,.35);--r:18px;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
     *{box-sizing:border-box}
-    body{
-      margin:0; color:var(--text);
+    body{margin:0;color:var(--text);
       background:radial-gradient(900px 500px at 30% -10%, rgba(59,130,246,.28), transparent 60%),
                  radial-gradient(800px 500px at 90% 10%, rgba(236,72,153,.22), transparent 60%),
                  radial-gradient(900px 700px at 50% 110%, rgba(34,197,94,.18), transparent 60%),
-                 linear-gradient(180deg, #050812, var(--bg));
-    }
-    header{
-      position:sticky; top:0; z-index:2;
-      backdrop-filter: blur(10px);
-      background:rgba(7,11,22,.65);
-      border-bottom:1px solid var(--line);
-    }
-    .top{max-width:1100px; margin:0 auto; padding:14px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
-    .brand{display:flex; flex-direction:column; gap:2px}
-    .brand h1{margin:0; font-size:16px; letter-spacing:.2px}
-    .brand p{margin:0; font-size:12px; color:var(--muted)}
-    .chip{font-size:12px; font-weight:900; color:#081022; background:linear-gradient(90deg,var(--orange),var(--pink)); padding:7px 12px; border-radius:999px; box-shadow:0 10px 24px rgba(0,0,0,.25); white-space:nowrap;}
-    main{max-width:1100px; margin:0 auto; padding:14px}
-    .grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:14px;}
-    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
-    .card{background:rgba(15,26,51,.9); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden;}
-    .hd{padding:12px 14px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg, rgba(255,255,255,.04), transparent); border-bottom:1px solid var(--line);}
-    .hd h2{margin:0; font-size:14px}
+                 linear-gradient(180deg, #050812, var(--bg));}
+    header{position:sticky;top:0;z-index:2;backdrop-filter:blur(10px);background:rgba(7,11,22,.65);border-bottom:1px solid var(--line);}
+    .top{max-width:1100px;margin:0 auto;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .brand h1{margin:0;font-size:16px}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+    main{max-width:1100px;margin:0 auto;padding:14px}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:14px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .card{background:rgba(15,26,51,.9);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;}
+    .hd{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:linear-gradient(180deg, rgba(255,255,255,.04), transparent);}
+    .hd h2{margin:0;font-size:14px}
     .bd{padding:14px}
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .col{flex:1; min-width:160px}
-    label{display:block; font-size:12px; color:var(--muted); margin:10px 0 6px}
-    input, textarea{width:100%; padding:10px 12px; border-radius:14px; border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--text); outline:none;}
-    textarea{min-height:74px; resize:vertical}
-    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
-    button{border:0; border-radius:14px; padding:10px 12px; font-weight:900; cursor:pointer; color:#071022; box-shadow:0 12px 26px rgba(0,0,0,.30); transition:transform .06s ease;}
-    button:active{transform:scale(.98)}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .col{flex:1;min-width:160px}
+    label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px}
+    input, textarea{width:100%;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text);outline:none;}
+    textarea{min-height:70px;resize:vertical}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    button{border:0;border-radius:14px;padding:10px 12px;font-weight:900;cursor:pointer;color:#071022;box-shadow:0 12px 26px rgba(0,0,0,.30)}
     .b-blue{background:linear-gradient(90deg,var(--blue),#60a5fa)}
     .b-green{background:linear-gradient(90deg,var(--green),#86efac)}
     .b-orange{background:linear-gradient(90deg,var(--orange),#fdba74)}
     .b-pink{background:linear-gradient(90deg,var(--pink),#f9a8d4)}
     .b-red{background:linear-gradient(90deg,var(--red),#fca5a5)}
-    .ghost{background:transparent; color:var(--text); border:1px solid var(--line); box-shadow:none;}
-    .status{margin-top:10px; padding:10px 12px; border-radius:14px; border:1px dashed var(--line); background:rgba(255,255,255,.03); font-size:12px; color:var(--muted); white-space:pre-wrap;}
-    .kpis{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-    .kpi{border:1px solid var(--line); background:rgba(255,255,255,.03); border-radius:14px; padding:10px;}
-    .kpi .v{font-size:16px; font-weight:950}
-    .kpi .k{font-size:11px; color:var(--muted); margin-top:2px}
-    table{width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border:1px solid var(--line); border-radius:14px; background:rgba(11,20,43,.7);}
-    th, td{font-size:12px; padding:9px 10px; border-bottom:1px solid rgba(255,255,255,.06); text-align:left;}
-    th{color:#cfe0ff; background:rgba(255,255,255,.03)}
+    .ghost{background:transparent;color:var(--text);border:1px solid var(--line);box-shadow:none}
+    .pill{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+    .status{margin-top:10px;padding:10px 12px;border-radius:14px;border:1px dashed var(--line);background:rgba(255,255,255,.03);font-size:12px;color:var(--muted);white-space:pre-wrap}
+    table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;background:rgba(11,20,43,.7);overflow:hidden}
+    th,td{font-size:12px;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+    th{color:#cfe0ff;background:rgba(255,255,255,.03)}
     tr:last-child td{border-bottom:none}
-    .small{font-size:11px; color:var(--muted)}
-    .hr{height:1px; background:var(--line); margin:12px 0}
-    canvas{width:100%; height:320px; background:rgba(7,11,22,.35); border:1px solid var(--line); border-radius:16px;}
-    .footer{margin:16px 0 6px; color:var(--muted); font-size:11px; text-align:center;}
-    .pill{display:inline-block; padding:3px 8px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.03); margin-left:6px;}
+    canvas{width:100%;height:320px;background:rgba(7,11,22,.35);border:1px solid var(--line);border-radius:16px}
   </style>
 </head>
 <body>
 <header>
   <div class="top">
     <div class="brand">
-      <h1>CO2-Play — Field Calculator</h1>
-      <p>GitHub Pages + Google Sheets (Web App). Coleta → ajuste (R²) → sincroniza.</p>
+      <h1>CO2-Play — Direct Save</h1>
+      <p>Grava no app + grava no Sheets na hora (fila offline se falhar).</p>
     </div>
-    <div class="chip">SYNC Sheets ✅</div>
+    <div>
+      <span class="pill" id="countDB">0 pts</span>
+      <span class="pill" id="countOut">0 pendentes</span>
+    </div>
   </div>
 </header>
 
 <main>
   <div class="grid">
-
     <section class="card">
-      <div class="hd">
-        <h2>1) Entrada (campo)</h2>
-        <span class="pill" id="countDB">0 registros</span>
-      </div>
+      <div class="hd"><h2>Entrada</h2><span class="pill" id="conn">—</span></div>
       <div class="bd">
         <div class="row">
           <div class="col"><label>Data</label><input id="date" type="date"/></div>
           <div class="col"><label>Hora início</label><input id="hini" type="time" step="1"/></div>
           <div class="col"><label>Hora fim</label><input id="hfim" type="time" step="1"/></div>
         </div>
-
         <div class="row">
-          <div class="col"><label>Tempo_s</label><input id="t" type="number" step="1" placeholder="0, 5, 10..."/></div>
-          <div class="col"><label>CO2_ppm</label><input id="co2" type="number" step="0.01" placeholder="412.35"/></div>
-          <div class="col"><label>Obs (opcional)</label><input id="obsRow" type="text" placeholder="delay, vento etc."/></div>
+          <div class="col"><label>Tempo_s</label><input id="t" type="number" step="1"/></div>
+          <div class="col"><label>CO2_ppm</label><input id="co2" type="number" step="0.01"/></div>
+          <div class="col"><label>Obs</label><input id="obsRow" type="text"/></div>
         </div>
 
         <div class="btns">
-          <button class="b-green" onclick="addPoint()">Adicionar ponto</button>
-          <button class="b-blue" onclick="autoFit()">Melhor reta (auto R²)</button>
-          <button class="b-orange" onclick="draw()">Atualizar gráfico</button>
-          <button class="ghost" onclick="clearEntrada()">Limpar</button>
+          <button class="b-green" onclick="addPoint()">Adicionar (salva já)</button>
+          <button class="b-blue" onclick="autoFit()">Auto R²</button>
+          <button class="b-orange" onclick="draw()">Gráfico</button>
         </div>
 
         <div class="status" id="status">Pronto.</div>
 
-        <div class="hr"></div>
-        <h3 style="margin:0 0 8px 0;font-size:13px;color:#cfe0ff">Últimos pontos</h3>
-        <div style="max-height:220px; overflow:auto">
-          <table id="tbl"><thead><tr>
-            <th>Data</th><th>Ini</th><th>Fim</th><th>Tempo_s</th><th>CO2_ppm</th><th>Obs</th>
-          </tr></thead><tbody></tbody></table>
+        <div style="margin-top:12px;max-height:220px;overflow:auto">
+          <table id="tbl"><thead><tr><th>Data</th><th>Ini</th><th>Fim</th><th>t</th><th>CO2</th><th>Obs</th></tr></thead><tbody></tbody></table>
         </div>
       </div>
     </section>
 
     <aside class="card">
-      <div class="hd">
-        <h2>2) Ajuste & Sync</h2>
-        <span class="pill" id="lastFit">sem ajuste</span>
-      </div>
+      <div class="hd"><h2>Sheets (Web App) + Ajuste</h2><span class="pill" id="lastFit">sem ajuste</span></div>
       <div class="bd">
-
-        <label>URL do Web App (Apps Script /exec)</label>
-        <input id="apiUrl" type="text"
-          value="https://script.google.com/macros/s/AKfycbw-pBQ2ZimGniiKI5d4Ql6UKYWTCvJYiLzARdnbZQ94bi7oKlxgRYuZKJFR8pu7X-A/exec"/>
-
+        <label>URL /exec</label>
+        <input id="apiUrl" type="text" value="https://script.google.com/macros/s/AKfycbw-pBQ2ZimGniiKI5d4Ql6UKYWTCvJYiLzARdnbZQ94bi7oKlxgRYuZKJFR8pu7X-A/exec"/>
         <label>Token</label>
-        <input id="apiToken" type="password" placeholder="sua senha do TOKEN"/>
+        <input id="apiToken" type="password" placeholder="TOKEN do Script Properties"/>
 
         <div class="btns">
-          <button class="b-pink" onclick="saveApi()">Salvar URL/Token</button>
+          <button class="b-pink" onclick="saveApi()">Salvar</button>
           <button class="ghost" onclick="ping()">Ping</button>
+          <button class="b-blue" onclick="flushOutbox()">Reenviar fila</button>
         </div>
 
-        <div class="hr"></div>
+        <div style="margin-top:10px" class="status" id="syncStatus">—</div>
+
+        <label>Janela mínima (s)</label>
+        <input id="wmin" type="number" value="60"/>
+
+        <label>Passo (s)</label>
+        <input id="step" type="number" value="5"/>
 
         <div class="row">
-          <div class="col"><label>Janela mínima (s)</label><input id="wmin" type="number" value="60" step="1"/></div>
-          <div class="col"><label>Passo (s)</label><input id="step" type="number" value="5" step="1"/></div>
+          <div class="col"><label>Manual t_ini</label><input id="t0" type="number"/></div>
+          <div class="col"><label>Manual t_fim</label><input id="tf" type="number"/></div>
         </div>
-
-        <div class="row">
-          <div class="col"><label>Manual: t_ini</label><input id="t0" type="number" step="1"/></div>
-          <div class="col"><label>Manual: t_fim</label><input id="tf" type="number" step="1"/></div>
-        </div>
-
-        <label>Obs do ajuste</label>
-        <textarea id="obsFit" placeholder="cortei delay, etc."></textarea>
+        <label>Obs ajuste</label>
+        <textarea id="obsFit"></textarea>
 
         <div class="btns">
-          <button class="b-blue" onclick="manualFit()">Calcular (manual)</button>
-          <button class="b-orange" onclick="saveFit()">Salvar resultado</button>
+          <button class="b-blue" onclick="manualFit()">Manual</button>
+          <button class="b-orange" onclick="saveFit()">Salvar ajuste (salva já)</button>
         </div>
 
-        <div class="hr"></div>
-
-        <div class="kpis">
-          <div class="kpi"><div class="v" id="k_r2">—</div><div class="k">R²</div></div>
-          <div class="kpi"><div class="v" id="k_slope">—</div><div class="k">Slope</div></div>
-          <div class="kpi"><div class="v" id="k_int">—</div><div class="k">Intercept</div></div>
-          <div class="kpi"><div class="v" id="k_win">—</div><div class="k">Janela</div></div>
+        <div class="row" style="margin-top:10px">
+          <div class="col"><div class="pill">R²: <span id="k_r2">—</span></div></div>
+          <div class="col"><div class="pill">Slope: <span id="k_slope">—</span></div></div>
         </div>
 
-        <div class="hr"></div>
-
-        <canvas id="cv" width="900" height="520"></canvas>
-
-        <div class="hr"></div>
-
-        <div class="btns">
-          <button class="b-green" onclick="syncUp()">Sync UP (enviar → Sheets)</button>
-          <button class="b-blue" onclick="syncDown()">Sync DOWN (baixar ← Sheets)</button>
-          <button class="b-red" onclick="resetLocal()">Reset local</button>
-        </div>
-
-        <div class="footer">
-          Organizador: <b>Ernandes</b> (uso educacional e políticas públicas).
-          <span class="pill">GitHub + Sheets</span>
-        </div>
-
+        <canvas id="cv" width="900" height="520" style="margin-top:12px"></canvas>
       </div>
     </aside>
-
   </div>
 </main>
 
@@ -195,89 +141,179 @@
 const KEY_DB="co2play_db_v1";
 const KEY_FITS="co2play_fits_v1";
 const KEY_API="co2play_api_v1";
+const KEY_OUT="co2play_outbox_v1";
 
 let db = loadJSON(KEY_DB, []);
 let fits = loadJSON(KEY_FITS, []);
-let currentFit = null;
+let outbox = loadJSON(KEY_OUT, []);
+let currentFit=null;
 
 function $(id){ return document.getElementById(id); }
 function setStatus(msg){ $("status").textContent = msg; }
+function setSync(msg){ $("syncStatus").textContent = msg; }
 
-function loadJSON(key, fallback){
-  try{ return JSON.parse(localStorage.getItem(key)||"null") ?? fallback; }catch(e){ return fallback; }
-}
+function loadJSON(key, fallback){ try{ return JSON.parse(localStorage.getItem(key)||"null") ?? fallback; }catch(e){ return fallback; } }
 function saveJSON(key,val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+function updateBadges(){
+  $("countDB").textContent = db.length + " pts";
+  $("countOut").textContent = outbox.length + " pendentes";
+  $("conn").textContent = navigator.onLine ? "online" : "offline";
+}
 function esc(s){ return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
-function fmt(v,d=6){ if(v==null) return "—"; if(Number.isFinite(v)) return v.toFixed(d); return String(v); }
 
 function init(){
   const now=new Date();
   $("date").value = now.toISOString().slice(0,10);
 
   const api = loadJSON(KEY_API, {});
-  if(api.url) $("apiUrl").value = api.url;
-  if(api.token) $("apiToken").value = api.token;
+  if(api.url) $("apiUrl").value=api.url;
+  if(api.token) $("apiToken").value=api.token;
 
   refresh();
+  updateBadges();
+
+  window.addEventListener("online", ()=>{ updateBadges(); flushOutbox(); });
+  window.addEventListener("offline", updateBadges);
 }
 function refresh(){
-  $("countDB").textContent = `${db.length} registros`;
+  saveJSON(KEY_DB, db);
+  saveJSON(KEY_FITS, fits);
+  saveJSON(KEY_OUT, outbox);
+  updateBadges();
   renderTable();
   draw();
 }
 function renderTable(){
-  const tbody = $("tbl").querySelector("tbody");
+  const tbody=$("tbl").querySelector("tbody");
   tbody.innerHTML="";
   const last=db.slice(-20).reverse();
   for(const r of last){
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${esc(r.date||"")}</td><td>${esc(r.hini||"")}</td><td>${esc(r.hfim||"")}</td>
-      <td>${esc(r.t)}</td><td>${esc(r.co2)}</td><td>${esc(r.obs||"")}</td>`;
+    tr.innerHTML=`<td>${esc(r.date||"")}</td><td>${esc(r.hini||"")}</td><td>${esc(r.hfim||"")}</td><td>${esc(r.t)}</td><td>${esc(r.co2)}</td><td>${esc(r.obs||"")}</td>`;
     tbody.appendChild(tr);
   }
 }
 
-function clearEntrada(){ $("t").value=""; $("co2").value=""; $("obsRow").value=""; setStatus("Entrada limpa."); }
+function cryptoId(){ return "id_"+Math.random().toString(16).slice(2)+"_"+Date.now().toString(16); }
+function getApi(){
+  const api=loadJSON(KEY_API,{});
+  return { url: ($("apiUrl").value||api.url||"").trim(), token: ($("apiToken").value||api.token||"").trim() };
+}
+function saveApi(){
+  const {url, token}=getApi();
+  saveJSON(KEY_API,{url, token});
+  setSync("URL/TOKEN salvos ✅");
+}
+
+async function ping(){
+  try{
+    const {url}=getApi();
+    const r=await fetch(`${url}?action=ping`);
+    const j=await r.json();
+    setSync("Ping OK ✅ " + j.version);
+  }catch(e){ setSync("Ping erro: " + e.message); }
+}
+
+async function postAPI(payload){
+  const {url, token}=getApi();
+  if(!url) throw new Error("Defina a URL do Web App.");
+  if(!token) throw new Error("Defina o TOKEN.");
+  payload.token = token;
+
+  const r = await fetch(url, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify(payload)
+  });
+  const j = await r.json();
+  if(!j.ok) throw new Error(j.error || "Falhou");
+  return j;
+}
+
+/** DIRECT SAVE + OUTBOX **/
+async function trySendOrQueue(item){
+  // item: {type:"point"|"fit", payload:{...}}
+  if(!navigator.onLine){
+    outbox.push(item);
+    setSync("Offline: salvei na fila ✅");
+    refresh();
+    return;
+  }
+  try{
+    if(item.type==="point"){
+      await postAPI({action:"appendPoint", point:item.payload});
+    } else {
+      await postAPI({action:"appendFit", fit:item.payload});
+    }
+    setSync("Salvo no Sheets ✅");
+  }catch(e){
+    outbox.push(item);
+    setSync("Falhou salvar no Sheets → ficou na fila ✅ ("+e.message+")");
+  }
+  refresh();
+}
+
+async function flushOutbox(){
+  if(!outbox.length){ setSync("Fila vazia."); return; }
+  if(!navigator.onLine){ setSync("Sem internet. Fila mantida."); return; }
+
+  setSync(`Reenviando fila... (${outbox.length})`);
+  const remaining=[];
+  for(const item of outbox){
+    try{
+      if(item.type==="point"){
+        await postAPI({action:"appendPoint", point:item.payload});
+      } else {
+        await postAPI({action:"appendFit", fit:item.payload});
+      }
+    }catch(e){
+      remaining.push(item);
+    }
+  }
+  outbox = remaining;
+  setSync(remaining.length ? `Alguns falharam e ficaram na fila (${remaining.length}).` : "Fila reenviada ✅");
+  refresh();
+}
 
 function addPoint(){
   const date=$("date").value, hini=$("hini").value, hfim=$("hfim").value;
   const t=Number($("t").value), co2=Number($("co2").value);
   const obs=$("obsRow").value;
 
-  if(!Number.isFinite(t)||!Number.isFinite(co2)){ setStatus("Preencha Tempo_s e CO2_ppm."); return; }
+  if(!Number.isFinite(t)||!Number.isFinite(co2)){
+    setStatus("Preencha Tempo_s e CO2_ppm.");
+    return;
+  }
 
-  db.push({ id: cryptoId(), date, hini, hfim, t, co2, obs, ts: Date.now(), source:"github" });
+  const point = { id:cryptoId(), date, hini, hfim, t, co2, obs, ts:new Date().toISOString(), source:"github" };
+  db.push(point);
   db.sort((a,b)=>a.t-b.t);
-  saveJSON(KEY_DB, db);
+  setStatus(`Ponto adicionado (local) t=${t} co2=${co2}. Tentando salvar no Sheets...`);
 
-  setStatus(`Ponto adicionado: t=${t}, CO2=${co2}`);
-  clearEntrada();
+  // limpa
+  $("t").value=""; $("co2").value=""; $("obsRow").value="";
   refresh();
+
+  // manda ou enfileira
+  trySendOrQueue({type:"point", payload: point});
 }
 
 function getSeries(){
-  return db.filter(r=>Number.isFinite(r.t)&&Number.isFinite(r.co2))
-           .map(r=>[Number(r.t), Number(r.co2)])
-           .sort((a,b)=>a[0]-b[0]);
+  return db.filter(r=>Number.isFinite(r.t)&&Number.isFinite(r.co2)).map(r=>[Number(r.t),Number(r.co2)]).sort((a,b)=>a[0]-b[0]);
 }
-
 function regressaoLinear(xy){
   const n=xy.length;
   const x=xy.map(r=>r[0]), y=xy.map(r=>r[1]);
   const mx=x.reduce((a,b)=>a+b,0)/n, my=y.reduce((a,b)=>a+b,0)/n;
-
   let num=0, den=0;
   for(let i=0;i<n;i++){ num+=(x[i]-mx)*(y[i]-my); den+=(x[i]-mx)**2; }
   const slope = den===0 ? NaN : num/den;
   const intercept = my - slope*mx;
-
   let ssTot=0, ssRes=0;
-  for(let i=0;i<n;i++){
-    const yhat=slope*x[i]+intercept;
-    ssTot+=(y[i]-my)**2; ssRes+=(y[i]-yhat)**2;
-  }
-  const r2 = ssTot===0 ? NaN : 1 - ssRes/ssTot;
-  return { slope, intercept, r2, n };
+  for(let i=0;i<n;i++){ const yhat=slope*x[i]+intercept; ssTot+=(y[i]-my)**2; ssRes+=(y[i]-yhat)**2; }
+  const r2 = ssTot===0 ? NaN : 1-ssRes/ssTot;
+  return {slope,intercept,r2,n};
 }
 
 function autoFit(){
@@ -285,10 +321,9 @@ function autoFit(){
   if(series.length<5){ setStatus("Poucos pontos."); return; }
   const wmin=Number($("wmin").value||60), step=Number($("step").value||5);
   const tMin=series[0][0], tMax=series[series.length-1][0];
-
   let best=null;
-  for(let t0=tMin; t0<=tMax; t0+=step){
-    for(let tf=t0+wmin; tf<=tMax; tf+=step){
+  for(let t0=tMin;t0<=tMax;t0+=step){
+    for(let tf=t0+wmin;tf<=tMax;tf+=step){
       const sub=series.filter(r=>r[0]>=t0&&r[0]<=tf);
       if(sub.length<3) continue;
       const reg=regressaoLinear(sub);
@@ -299,9 +334,10 @@ function autoFit(){
   if(!best){ setStatus("Não achei janela."); return; }
   currentFit=best;
   $("lastFit").textContent=`auto R²=${best.r2.toFixed(4)}`;
-  $("t0").value=best.t_ini; $("tf").value=best.t_fim; $("obsFit").value="";
-  fillKPIs(best);
-  setStatus(`Auto OK: R²=${best.r2.toFixed(4)} | t=[${best.t_ini},${best.t_fim}] | n=${best.n}`);
+  $("t0").value=best.t_ini; $("tf").value=best.t_fim;
+  $("k_r2").textContent=best.r2.toFixed(4);
+  $("k_slope").textContent=best.slope.toFixed(6);
+  setStatus(`Auto OK R²=${best.r2.toFixed(4)} janela=[${best.t_ini},${best.t_fim}] n=${best.n}`);
   draw();
 }
 
@@ -312,25 +348,18 @@ function manualFit(){
   const sub=series.filter(r=>r[0]>=t0&&r[0]<=tf);
   if(sub.length<3){ setStatus("Menos de 3 pontos."); return; }
   const reg=regressaoLinear(sub);
-  if(!Number.isFinite(reg.r2)){ setStatus("R² não calculável."); return; }
   currentFit={...reg,t_ini:t0,t_fim:tf,metodo:"manual"};
   $("lastFit").textContent=`manual R²=${reg.r2.toFixed(4)}`;
-  fillKPIs(currentFit);
-  setStatus(`Manual OK: R²=${reg.r2.toFixed(4)} | t=[${t0},${tf}] | n=${reg.n}`);
+  $("k_r2").textContent=reg.r2.toFixed(4);
+  $("k_slope").textContent=reg.slope.toFixed(6);
+  setStatus(`Manual OK R²=${reg.r2.toFixed(4)} janela=[${t0},${tf}] n=${reg.n}`);
   draw();
-}
-
-function fillKPIs(f){
-  $("k_r2").textContent = Number.isFinite(f.r2) ? f.r2.toFixed(4) : "—";
-  $("k_slope").textContent = fmt(f.slope,6);
-  $("k_int").textContent = fmt(f.intercept,6);
-  $("k_win").textContent = `${f.t_ini} – ${f.t_fim}`;
 }
 
 function saveFit(){
   if(!currentFit){ setStatus("Faça um ajuste antes."); return; }
   const obs=$("obsFit").value||"";
-  const out={
+  const fit={
     id: cryptoId(),
     saved_at: new Date().toISOString(),
     metodo: currentFit.metodo,
@@ -344,14 +373,15 @@ function saveFit(){
     obs,
     source:"github"
   };
-  fits.push(out);
-  saveJSON(KEY_FITS, fits);
-  setStatus(`Resultado salvo local (${fits.length}).`);
+  fits.push(fit);
+  setStatus("Ajuste salvo local. Tentando salvar no Sheets...");
+  refresh();
+  trySendOrQueue({type:"fit", payload: fit});
 }
 
 function draw(){
   const cv=$("cv"), ctx=cv.getContext("2d");
-  const w=cv.width, h=cv.height;
+  const w=cv.width,h=cv.height;
   ctx.clearRect(0,0,w,h);
   ctx.fillStyle="rgba(255,255,255,0.02)";
   ctx.fillRect(0,0,w,h);
@@ -359,25 +389,18 @@ function draw(){
   const series=getSeries();
   if(series.length<2){
     ctx.fillStyle="rgba(233,241,255,0.9)"; ctx.font="14px system-ui";
-    ctx.fillText("Sem pontos suficientes para gráfico.", 24, 40);
+    ctx.fillText("Sem pontos suficientes.", 24, 40);
     return;
   }
   const tMin=series[0][0], tMax=series[series.length-1][0];
   let yMin=Math.min(...series.map(d=>d[1])), yMax=Math.max(...series.map(d=>d[1]));
   if(yMin===yMax){ yMin-=1; yMax+=1; }
-
   const pad={l:60,r:18,t:18,b:46};
   const X=t=>pad.l+(t-tMin)/(tMax-tMin)*(w-pad.l-pad.r);
   const Y=y=>pad.t+(yMax-y)/(yMax-yMin)*(h-pad.t-pad.b);
 
-  ctx.strokeStyle="rgba(255,255,255,0.12)";
-  ctx.lineWidth=1;
+  ctx.strokeStyle="rgba(255,255,255,0.12)"; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,h-pad.b); ctx.lineTo(w-pad.r,h-pad.b); ctx.stroke();
-
-  ctx.fillStyle="rgba(255,255,255,0.45)";
-  ctx.font="12px system-ui";
-  ctx.fillText("Tempo_s", w/2-26, h-16);
-  ctx.save(); ctx.translate(18,h/2+20); ctx.rotate(-Math.PI/2); ctx.fillText("CO2_ppm",0,0); ctx.restore();
 
   ctx.fillStyle="rgba(59,130,246,0.95)";
   for(const [t,y] of series){ const x=X(t), yy=Y(y); ctx.beginPath(); ctx.arc(x,yy,4,0,Math.PI*2); ctx.fill(); }
@@ -394,102 +417,7 @@ function draw(){
     ctx.strokeStyle="rgba(34,197,94,0.95)";
     ctx.lineWidth=3;
     ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(xf,yf); ctx.stroke();
-
-    ctx.fillStyle="rgba(233,241,255,0.92)";
-    ctx.font="14px system-ui";
-    ctx.fillText(`Ajuste: ${currentFit.metodo} | R²=${Number(currentFit.r2).toFixed(4)} | n=${currentFit.n}`, pad.l+8, pad.t+18);
   }
-}
-
-/* ============ SYNC (GitHub ↔ Web App) ============ */
-
-function saveApi(){
-  const url=$("apiUrl").value.trim();
-  const token=$("apiToken").value.trim();
-  saveJSON(KEY_API, {url, token});
-  setStatus("URL/Token salvos no navegador ✅");
-}
-
-function getApi(){
-  const api=loadJSON(KEY_API,{});
-  const url=($("apiUrl").value||api.url||"").trim();
-  const token=($("apiToken").value||api.token||"").trim();
-  return {url, token};
-}
-
-async function ping(){
-  try{
-    const {url}=getApi();
-    if(!url) return setStatus("Defina a URL do Web App.");
-    const r = await fetch(`${url}?action=ping`, { method:"GET" });
-    const j = await r.json();
-    setStatus("Ping: " + JSON.stringify(j, null, 2));
-  }catch(e){
-    setStatus("Erro ping: " + e.message);
-  }
-}
-
-async function syncUp(){
-  try{
-    const {url, token}=getApi();
-    if(!url) return setStatus("Defina a URL do Web App.");
-    if(!token) return setStatus("Defina o TOKEN.");
-
-    // envia tudo (append no Sheets)
-    const payload = { action:"push", token, db, fits };
-    setStatus("Enviando para o Sheets (push)...");
-
-    const r = await fetch(url, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify(payload)
-    });
-    const j = await r.json();
-    if(!j.ok) throw new Error(j.error || "push falhou");
-    setStatus("Sync UP OK ✅\n" + JSON.stringify(j, null, 2));
-  }catch(e){
-    setStatus("Erro Sync UP: " + e.message);
-  }
-}
-
-async function syncDown(){
-  try{
-    const {url, token}=getApi();
-    if(!url) return setStatus("Defina a URL do Web App.");
-    if(!token) return setStatus("Defina o TOKEN.");
-
-    setStatus("Baixando do Sheets (pull)...");
-    const r = await fetch(`${url}?action=pull&token=${encodeURIComponent(token)}`, { method:"GET" });
-    const j = await r.json();
-    if(!j.ok) throw new Error(j.error || "pull falhou");
-
-    // substitui local pelo remoto (você pode mudar para "merge" depois)
-    db = Array.isArray(j.db) ? j.db : [];
-    fits = Array.isArray(j.fits) ? j.fits : [];
-    saveJSON(KEY_DB, db);
-    saveJSON(KEY_FITS, fits);
-
-    setStatus(`Sync DOWN OK ✅\nDB=${db.length} | FITS=${fits.length}`);
-    refresh();
-  }catch(e){
-    setStatus("Erro Sync DOWN: " + e.message);
-  }
-}
-
-function resetLocal(){
-  if(!confirm("Resetar tudo local?")) return;
-  db=[]; fits=[]; currentFit=null;
-  localStorage.removeItem(KEY_DB);
-  localStorage.removeItem(KEY_FITS);
-  setStatus("Reset local OK.");
-  refresh();
-}
-
-/* ============ Util ============ */
-
-function cryptoId(){
-  // id simples e estável; suficiente pro seu fluxo
-  return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
 }
 
 init();
