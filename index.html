@@ -7,19 +7,11 @@
   <meta name="theme-color" content="#0b1220"/>
   <style>
     :root{
-      --bg:#070b16;
-      --card:#0f1a33;
-      --card2:#0b142b;
-      --line:rgba(255,255,255,.10);
-      --text:#eaf1ff;
-      --muted:#a7b8de;
-      --blue:#3b82f6;
-      --green:#22c55e;
-      --orange:#f97316;
-      --pink:#ec4899;
-      --red:#ef4444;
-      --shadow:0 18px 48px rgba(0,0,0,.35);
-      --r:18px;
+      --bg:#070b16; --card:#0f1a33; --line:rgba(255,255,255,.10);
+      --text:#eaf1ff; --muted:#a7b8de;
+      --blue:#3b82f6; --green:#22c55e; --orange:#f97316; --pink:#ec4899; --red:#ef4444;
+      --shadow:0 18px 48px rgba(0,0,0,.35); --r:18px;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
     *{box-sizing:border-box}
     body{
@@ -28,7 +20,6 @@
                  radial-gradient(800px 500px at 90% 10%, rgba(236,72,153,.22), transparent 60%),
                  radial-gradient(900px 700px at 50% 110%, rgba(34,197,94,.18), transparent 60%),
                  linear-gradient(180deg, #050812, var(--bg));
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
     header{
       position:sticky; top:0; z-index:2;
@@ -36,122 +27,46 @@
       background:rgba(7,11,22,.65);
       border-bottom:1px solid var(--line);
     }
-    .top{
-      max-width:1100px; margin:0 auto; padding:14px 14px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-    }
+    .top{max-width:1100px; margin:0 auto; padding:14px; display:flex; align-items:center; justify-content:space-between; gap:12px;}
     .brand{display:flex; flex-direction:column; gap:2px}
     .brand h1{margin:0; font-size:16px; letter-spacing:.2px}
     .brand p{margin:0; font-size:12px; color:var(--muted)}
-    .chip{
-      font-size:12px; font-weight:900; color:#081022;
-      background:linear-gradient(90deg,var(--orange),var(--pink));
-      padding:7px 12px; border-radius:999px;
-      box-shadow:0 10px 24px rgba(0,0,0,.25);
-      white-space:nowrap;
-    }
-
+    .chip{font-size:12px; font-weight:900; color:#081022; background:linear-gradient(90deg,var(--orange),var(--pink)); padding:7px 12px; border-radius:999px; box-shadow:0 10px 24px rgba(0,0,0,.25); white-space:nowrap;}
     main{max-width:1100px; margin:0 auto; padding:14px}
-    .grid{
-      display:grid; grid-template-columns: 1.2fr .8fr;
-      gap:14px;
-    }
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-    }
-    .card{
-      background:rgba(15,26,51,.9);
-      border:1px solid var(--line);
-      border-radius:var(--r);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-    .card .hd{
-      padding:12px 14px;
-      display:flex; align-items:center; justify-content:space-between;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), transparent);
-      border-bottom:1px solid var(--line);
-    }
-    .card .hd h2{margin:0; font-size:14px}
-    .card .bd{padding:14px}
+    .grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:14px;}
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+    .card{background:rgba(15,26,51,.9); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden;}
+    .hd{padding:12px 14px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(180deg, rgba(255,255,255,.04), transparent); border-bottom:1px solid var(--line);}
+    .hd h2{margin:0; font-size:14px}
+    .bd{padding:14px}
     .row{display:flex; gap:10px; flex-wrap:wrap}
     .col{flex:1; min-width:160px}
     label{display:block; font-size:12px; color:var(--muted); margin:10px 0 6px}
-    input, select, textarea{
-      width:100%; padding:10px 12px; border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text); outline:none;
-    }
+    input, textarea{width:100%; padding:10px 12px; border-radius:14px; border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--text); outline:none;}
     textarea{min-height:74px; resize:vertical}
     .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
-    button{
-      border:0; border-radius:14px;
-      padding:10px 12px; font-weight:900; cursor:pointer;
-      color:#071022;
-      box-shadow:0 12px 26px rgba(0,0,0,.30);
-      transition:transform .06s ease;
-    }
+    button{border:0; border-radius:14px; padding:10px 12px; font-weight:900; cursor:pointer; color:#071022; box-shadow:0 12px 26px rgba(0,0,0,.30); transition:transform .06s ease;}
     button:active{transform:scale(.98)}
     .b-blue{background:linear-gradient(90deg,var(--blue),#60a5fa)}
     .b-green{background:linear-gradient(90deg,var(--green),#86efac)}
     .b-orange{background:linear-gradient(90deg,var(--orange),#fdba74)}
     .b-pink{background:linear-gradient(90deg,var(--pink),#f9a8d4)}
     .b-red{background:linear-gradient(90deg,var(--red),#fca5a5)}
-    .ghost{
-      background:transparent; color:var(--text);
-      border:1px solid var(--line);
-      box-shadow:none;
-    }
-
-    .status{
-      margin-top:10px; padding:10px 12px;
-      border-radius:14px; border:1px dashed var(--line);
-      background:rgba(255,255,255,.03);
-      font-size:12px; color:var(--muted);
-      white-space:pre-wrap;
-    }
-
+    .ghost{background:transparent; color:var(--text); border:1px solid var(--line); box-shadow:none;}
+    .status{margin-top:10px; padding:10px 12px; border-radius:14px; border:1px dashed var(--line); background:rgba(255,255,255,.03); font-size:12px; color:var(--muted); white-space:pre-wrap;}
     .kpis{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-    .kpi{
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      border-radius:14px; padding:10px;
-    }
+    .kpi{border:1px solid var(--line); background:rgba(255,255,255,.03); border-radius:14px; padding:10px;}
     .kpi .v{font-size:16px; font-weight:950}
     .kpi .k{font-size:11px; color:var(--muted); margin-top:2px}
-
-    table{
-      width:100%; border-collapse:separate; border-spacing:0;
-      overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:14px;
-      background:rgba(11,20,43,.7);
-    }
-    th, td{
-      font-size:12px; padding:9px 10px; border-bottom:1px solid rgba(255,255,255,.06);
-      text-align:left;
-    }
+    table{width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border:1px solid var(--line); border-radius:14px; background:rgba(11,20,43,.7);}
+    th, td{font-size:12px; padding:9px 10px; border-bottom:1px solid rgba(255,255,255,.06); text-align:left;}
     th{color:#cfe0ff; background:rgba(255,255,255,.03)}
     tr:last-child td{border-bottom:none}
     .small{font-size:11px; color:var(--muted)}
     .hr{height:1px; background:var(--line); margin:12px 0}
-
-    canvas{
-      width:100%; height:320px;
-      background:rgba(7,11,22,.35);
-      border:1px solid var(--line);
-      border-radius:16px;
-    }
-    .footer{
-      margin:16px 0 6px; color:var(--muted); font-size:11px;
-      text-align:center;
-    }
-    .pill{
-      display:inline-block; padding:3px 8px; border-radius:999px;
-      border:1px solid var(--line); background:rgba(255,255,255,.03);
-      margin-left:6px;
-    }
+    canvas{width:100%; height:320px; background:rgba(7,11,22,.35); border:1px solid var(--line); border-radius:16px;}
+    .footer{margin:16px 0 6px; color:var(--muted); font-size:11px; text-align:center;}
+    .pill{display:inline-block; padding:3px 8px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.03); margin-left:6px;}
   </style>
 </head>
 <body>
@@ -159,129 +74,89 @@
   <div class="top">
     <div class="brand">
       <h1>CO2-Play — Field Calculator</h1>
-      <p>Coleta → ajuste (R²) → resultado. Funciona no GitHub Pages (sem servidor).</p>
+      <p>GitHub Pages + Google Sheets (Web App). Coleta → ajuste (R²) → sincroniza.</p>
     </div>
-    <div class="chip">Auto R² + Manual Override</div>
+    <div class="chip">SYNC Sheets ✅</div>
   </div>
 </header>
 
 <main>
   <div class="grid">
 
-    <!-- ESQUERDA -->
     <section class="card">
       <div class="hd">
-        <h2>1) Entrada rápida (campo)</h2>
+        <h2>1) Entrada (campo)</h2>
         <span class="pill" id="countDB">0 registros</span>
       </div>
       <div class="bd">
         <div class="row">
-          <div class="col">
-            <label>Data</label>
-            <input id="date" type="date"/>
-          </div>
-          <div class="col">
-            <label>Hora início</label>
-            <input id="hini" type="time" step="1"/>
-          </div>
-          <div class="col">
-            <label>Hora fim</label>
-            <input id="hfim" type="time" step="1"/>
-          </div>
+          <div class="col"><label>Data</label><input id="date" type="date"/></div>
+          <div class="col"><label>Hora início</label><input id="hini" type="time" step="1"/></div>
+          <div class="col"><label>Hora fim</label><input id="hfim" type="time" step="1"/></div>
         </div>
 
         <div class="row">
-          <div class="col">
-            <label>Tempo_s (segundos desde início)</label>
-            <input id="t" type="number" step="1" placeholder="ex: 0, 5, 10..."/>
-          </div>
-          <div class="col">
-            <label>CO2_ppm</label>
-            <input id="co2" type="number" step="0.01" placeholder="ex: 412.35"/>
-          </div>
-          <div class="col">
-            <label>Obs (opcional)</label>
-            <input id="obsRow" type="text" placeholder="ex: delay sensor, vento, etc."/>
-          </div>
+          <div class="col"><label>Tempo_s</label><input id="t" type="number" step="1" placeholder="0, 5, 10..."/></div>
+          <div class="col"><label>CO2_ppm</label><input id="co2" type="number" step="0.01" placeholder="412.35"/></div>
+          <div class="col"><label>Obs (opcional)</label><input id="obsRow" type="text" placeholder="delay, vento etc."/></div>
         </div>
 
         <div class="btns">
           <button class="b-green" onclick="addPoint()">Adicionar ponto</button>
           <button class="b-blue" onclick="autoFit()">Melhor reta (auto R²)</button>
           <button class="b-orange" onclick="draw()">Atualizar gráfico</button>
-          <button class="ghost" onclick="clearEntrada()">Limpar entrada</button>
+          <button class="ghost" onclick="clearEntrada()">Limpar</button>
         </div>
 
-        <div class="status" id="status">Pronto. Adicione pontos (Tempo_s, CO2_ppm) e rode o Auto.</div>
+        <div class="status" id="status">Pronto.</div>
 
         <div class="hr"></div>
-
-        <div class="row">
-          <div class="col">
-            <label>Upload CSV (modelo)</label>
-            <input id="file" type="file" accept=".csv"/>
-            <div class="small">CSV com colunas: Data,Hora_inicio,Hora_fim,Tempo_s,CO2_ppm (obs opcional)</div>
-          </div>
-        </div>
-        <div class="btns">
-          <button class="b-pink" onclick="importCSV()">Importar CSV</button>
-          <button class="ghost" onclick="downloadModelo()">Baixar modelo CSV</button>
-        </div>
-
-        <div class="hr"></div>
-
-        <h3 style="margin:0 0 8px 0;font-size:13px;color:#cfe0ff">Amostra (últimos pontos)</h3>
+        <h3 style="margin:0 0 8px 0;font-size:13px;color:#cfe0ff">Últimos pontos</h3>
         <div style="max-height:220px; overflow:auto">
-          <table id="tbl">
-            <thead>
-              <tr>
-                <th>Data</th><th>Ini</th><th>Fim</th><th>Tempo_s</th><th>CO2_ppm</th><th>Obs</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+          <table id="tbl"><thead><tr>
+            <th>Data</th><th>Ini</th><th>Fim</th><th>Tempo_s</th><th>CO2_ppm</th><th>Obs</th>
+          </tr></thead><tbody></tbody></table>
         </div>
-
       </div>
     </section>
 
-    <!-- DIREITA -->
     <aside class="card">
       <div class="hd">
-        <h2>2) Ajuste & resultados</h2>
+        <h2>2) Ajuste & Sync</h2>
         <span class="pill" id="lastFit">sem ajuste</span>
       </div>
       <div class="bd">
 
+        <label>URL do Web App (Apps Script /exec)</label>
+        <input id="apiUrl" type="text"
+          value="https://script.google.com/macros/s/AKfycbw-pBQ2ZimGniiKI5d4Ql6UKYWTCvJYiLzARdnbZQ94bi7oKlxgRYuZKJFR8pu7X-A/exec"/>
+
+        <label>Token</label>
+        <input id="apiToken" type="password" placeholder="sua senha do TOKEN"/>
+
+        <div class="btns">
+          <button class="b-pink" onclick="saveApi()">Salvar URL/Token</button>
+          <button class="ghost" onclick="ping()">Ping</button>
+        </div>
+
+        <div class="hr"></div>
+
         <div class="row">
-          <div class="col">
-            <label>Janela mínima (s)</label>
-            <input id="wmin" type="number" value="60" step="1"/>
-          </div>
-          <div class="col">
-            <label>Passo de varredura (s)</label>
-            <input id="step" type="number" value="5" step="1"/>
-          </div>
+          <div class="col"><label>Janela mínima (s)</label><input id="wmin" type="number" value="60" step="1"/></div>
+          <div class="col"><label>Passo (s)</label><input id="step" type="number" value="5" step="1"/></div>
         </div>
 
         <div class="row">
-          <div class="col">
-            <label>Manual override: t_ini</label>
-            <input id="t0" type="number" step="1" placeholder="ex: 10"/>
-          </div>
-          <div class="col">
-            <label>Manual override: t_fim</label>
-            <input id="tf" type="number" step="1" placeholder="ex: 80"/>
-          </div>
+          <div class="col"><label>Manual: t_ini</label><input id="t0" type="number" step="1"/></div>
+          <div class="col"><label>Manual: t_fim</label><input id="tf" type="number" step="1"/></div>
         </div>
 
-        <label>Observação do ajuste (opcional)</label>
-        <textarea id="obsFit" placeholder="ex: cortei primeiros 15s por delay"></textarea>
+        <label>Obs do ajuste</label>
+        <textarea id="obsFit" placeholder="cortei delay, etc."></textarea>
 
         <div class="btns">
           <button class="b-blue" onclick="manualFit()">Calcular (manual)</button>
           <button class="b-orange" onclick="saveFit()">Salvar resultado</button>
-          <button class="b-red" onclick="resetDB()">Reset geral</button>
         </div>
 
         <div class="hr"></div>
@@ -290,7 +165,7 @@
           <div class="kpi"><div class="v" id="k_r2">—</div><div class="k">R²</div></div>
           <div class="kpi"><div class="v" id="k_slope">—</div><div class="k">Slope</div></div>
           <div class="kpi"><div class="v" id="k_int">—</div><div class="k">Intercept</div></div>
-          <div class="kpi"><div class="v" id="k_win">—</div><div class="k">Janela (t_ini–t_fim)</div></div>
+          <div class="kpi"><div class="v" id="k_win">—</div><div class="k">Janela</div></div>
         </div>
 
         <div class="hr"></div>
@@ -300,15 +175,14 @@
         <div class="hr"></div>
 
         <div class="btns">
-          <button class="b-green" onclick="exportResultadosCSV()">Exportar resultados (CSV)</button>
-          <button class="b-pink" onclick="exportDB()">Exportar banco (JSON)</button>
-          <button class="ghost" onclick="importDB()">Importar banco (JSON)</button>
+          <button class="b-green" onclick="syncUp()">Sync UP (enviar → Sheets)</button>
+          <button class="b-blue" onclick="syncDown()">Sync DOWN (baixar ← Sheets)</button>
+          <button class="b-red" onclick="resetLocal()">Reset local</button>
         </div>
-        <input id="filejson" type="file" accept=".json" style="display:none"/>
 
         <div class="footer">
           Organizador: <b>Ernandes</b> (uso educacional e políticas públicas).
-          <span class="pill">v1 GitHub</span>
+          <span class="pill">GitHub + Sheets</span>
         </div>
 
       </div>
@@ -318,9 +192,9 @@
 </main>
 
 <script>
-/*** Banco local (GitHub-friendly) ***/
-const KEY_DB = "co2play_db_v1";
-const KEY_FITS = "co2play_fits_v1";
+const KEY_DB="co2play_db_v1";
+const KEY_FITS="co2play_fits_v1";
+const KEY_API="co2play_api_v1";
 
 let db = loadJSON(KEY_DB, []);
 let fits = loadJSON(KEY_FITS, []);
@@ -330,19 +204,22 @@ function $(id){ return document.getElementById(id); }
 function setStatus(msg){ $("status").textContent = msg; }
 
 function loadJSON(key, fallback){
-  try{ return JSON.parse(localStorage.getItem(key) || "null") ?? fallback; }
-  catch(e){ return fallback; }
+  try{ return JSON.parse(localStorage.getItem(key)||"null") ?? fallback; }catch(e){ return fallback; }
 }
-function saveJSON(key, val){
-  localStorage.setItem(key, JSON.stringify(val));
-}
+function saveJSON(key,val){ localStorage.setItem(key, JSON.stringify(val)); }
+function esc(s){ return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
+function fmt(v,d=6){ if(v==null) return "—"; if(Number.isFinite(v)) return v.toFixed(d); return String(v); }
 
-function fmt(v, d=6){
-  if(v==null) return "—";
-  if(Number.isFinite(v)) return v.toFixed(d);
-  return String(v);
-}
+function init(){
+  const now=new Date();
+  $("date").value = now.toISOString().slice(0,10);
 
+  const api = loadJSON(KEY_API, {});
+  if(api.url) $("apiUrl").value = api.url;
+  if(api.token) $("apiToken").value = api.token;
+
+  refresh();
+}
 function refresh(){
   $("countDB").textContent = `${db.length} registros`;
   renderTable();
@@ -350,44 +227,26 @@ function refresh(){
 }
 function renderTable(){
   const tbody = $("tbl").querySelector("tbody");
-  tbody.innerHTML = "";
-  const last = db.slice(-20).reverse();
+  tbody.innerHTML="";
+  const last=db.slice(-20).reverse();
   for(const r of last){
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${esc(r.date||"")}</td>
-      <td>${esc(r.hini||"")}</td>
-      <td>${esc(r.hfim||"")}</td>
-      <td>${esc(r.t)}</td>
-      <td>${esc(r.co2)}</td>
-      <td>${esc(r.obs||"")}</td>
-    `;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${esc(r.date||"")}</td><td>${esc(r.hini||"")}</td><td>${esc(r.hfim||"")}</td>
+      <td>${esc(r.t)}</td><td>${esc(r.co2)}</td><td>${esc(r.obs||"")}</td>`;
     tbody.appendChild(tr);
   }
 }
-function esc(s){ return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
 
-function clearEntrada(){
-  $("t").value = "";
-  $("co2").value = "";
-  $("obsRow").value = "";
-  setStatus("Entrada limpa.");
-}
+function clearEntrada(){ $("t").value=""; $("co2").value=""; $("obsRow").value=""; setStatus("Entrada limpa."); }
 
 function addPoint(){
-  const date = $("date").value;
-  const hini = $("hini").value;
-  const hfim = $("hfim").value;
-  const t = Number($("t").value);
-  const co2 = Number($("co2").value);
-  const obs = $("obsRow").value;
+  const date=$("date").value, hini=$("hini").value, hfim=$("hfim").value;
+  const t=Number($("t").value), co2=Number($("co2").value);
+  const obs=$("obsRow").value;
 
-  if(!Number.isFinite(t) || !Number.isFinite(co2)){
-    setStatus("Preencha Tempo_s e CO2_ppm corretamente.");
-    return;
-  }
+  if(!Number.isFinite(t)||!Number.isFinite(co2)){ setStatus("Preencha Tempo_s e CO2_ppm."); return; }
 
-  db.push({ date, hini, hfim, t, co2, obs, ts: Date.now() });
+  db.push({ id: cryptoId(), date, hini, hfim, t, co2, obs, ts: Date.now(), source:"github" });
   db.sort((a,b)=>a.t-b.t);
   saveJSON(KEY_DB, db);
 
@@ -397,359 +256,243 @@ function addPoint(){
 }
 
 function getSeries(){
-  // pega a série do banco local (t, co2)
-  const series = db
-    .filter(r=>Number.isFinite(r.t) && Number.isFinite(r.co2))
-    .map(r=>[Number(r.t), Number(r.co2)])
-    .sort((a,b)=>a[0]-b[0]);
-  return series;
+  return db.filter(r=>Number.isFinite(r.t)&&Number.isFinite(r.co2))
+           .map(r=>[Number(r.t), Number(r.co2)])
+           .sort((a,b)=>a[0]-b[0]);
 }
 
 function regressaoLinear(xy){
-  const n = xy.length;
-  const x = xy.map(r=>r[0]);
-  const y = xy.map(r=>r[1]);
-  const mx = x.reduce((a,b)=>a+b,0)/n;
-  const my = y.reduce((a,b)=>a+b,0)/n;
+  const n=xy.length;
+  const x=xy.map(r=>r[0]), y=xy.map(r=>r[1]);
+  const mx=x.reduce((a,b)=>a+b,0)/n, my=y.reduce((a,b)=>a+b,0)/n;
 
   let num=0, den=0;
-  for(let i=0;i<n;i++){
-    num += (x[i]-mx)*(y[i]-my);
-    den += (x[i]-mx)**2;
-  }
+  for(let i=0;i<n;i++){ num+=(x[i]-mx)*(y[i]-my); den+=(x[i]-mx)**2; }
   const slope = den===0 ? NaN : num/den;
   const intercept = my - slope*mx;
 
   let ssTot=0, ssRes=0;
   for(let i=0;i<n;i++){
-    const yhat = slope*x[i] + intercept;
-    ssTot += (y[i]-my)**2;
-    ssRes += (y[i]-yhat)**2;
+    const yhat=slope*x[i]+intercept;
+    ssTot+=(y[i]-my)**2; ssRes+=(y[i]-yhat)**2;
   }
   const r2 = ssTot===0 ? NaN : 1 - ssRes/ssTot;
   return { slope, intercept, r2, n };
 }
 
 function autoFit(){
-  const series = getSeries();
-  if(series.length < 5){ setStatus("Poucos pontos para regressão."); return; }
+  const series=getSeries();
+  if(series.length<5){ setStatus("Poucos pontos."); return; }
+  const wmin=Number($("wmin").value||60), step=Number($("step").value||5);
+  const tMin=series[0][0], tMax=series[series.length-1][0];
 
-  const wmin = Number($("wmin").value || 60);
-  const step = Number($("step").value || 5);
-
-  const tMin = series[0][0];
-  const tMax = series[series.length-1][0];
-
-  let best = null;
-
+  let best=null;
   for(let t0=tMin; t0<=tMax; t0+=step){
     for(let tf=t0+wmin; tf<=tMax; tf+=step){
-      const sub = series.filter(r=>r[0]>=t0 && r[0]<=tf);
+      const sub=series.filter(r=>r[0]>=t0&&r[0]<=tf);
       if(sub.length<3) continue;
-      const reg = regressaoLinear(sub);
+      const reg=regressaoLinear(sub);
       if(!Number.isFinite(reg.r2)) continue;
-      if(!best || reg.r2 > best.r2){
-        best = { ...reg, t_ini:t0, t_fim:tf, metodo:"auto_R2max" };
-      }
+      if(!best||reg.r2>best.r2) best={...reg,t_ini:t0,t_fim:tf,metodo:"auto_R2max"};
     }
   }
-
-  if(!best){ setStatus("Não encontrei janela válida."); return; }
-
-  currentFit = best;
-  $("lastFit").textContent = `auto R²=${best.r2.toFixed(4)}`;
-  $("t0").value = best.t_ini;
-  $("tf").value = best.t_fim;
-  $("obsFit").value = "";
-
+  if(!best){ setStatus("Não achei janela."); return; }
+  currentFit=best;
+  $("lastFit").textContent=`auto R²=${best.r2.toFixed(4)}`;
+  $("t0").value=best.t_ini; $("tf").value=best.t_fim; $("obsFit").value="";
   fillKPIs(best);
-  setStatus(`Auto OK: R²=${best.r2.toFixed(4)} | t=[${best.t_ini}, ${best.t_fim}] | n=${best.n}`);
+  setStatus(`Auto OK: R²=${best.r2.toFixed(4)} | t=[${best.t_ini},${best.t_fim}] | n=${best.n}`);
   draw();
 }
 
 function manualFit(){
-  const series = getSeries();
-  const t0 = Number($("t0").value);
-  const tf = Number($("tf").value);
-  if(!Number.isFinite(t0) || !Number.isFinite(tf) || tf<=t0){
-    setStatus("Intervalo manual inválido (t_fim > t_ini).");
-    return;
-  }
-  const sub = series.filter(r=>r[0]>=t0 && r[0]<=tf);
-  if(sub.length<3){
-    setStatus("Intervalo manual ficou com menos de 3 pontos.");
-    return;
-  }
-  const reg = regressaoLinear(sub);
-  if(!Number.isFinite(reg.r2)){
-    setStatus("R² não calculável nesse intervalo.");
-    return;
-  }
-  currentFit = { ...reg, t_ini:t0, t_fim:tf, metodo:"manual" };
-  $("lastFit").textContent = `manual R²=${reg.r2.toFixed(4)}`;
+  const series=getSeries();
+  const t0=Number($("t0").value), tf=Number($("tf").value);
+  if(!Number.isFinite(t0)||!Number.isFinite(tf)||tf<=t0){ setStatus("Intervalo inválido."); return; }
+  const sub=series.filter(r=>r[0]>=t0&&r[0]<=tf);
+  if(sub.length<3){ setStatus("Menos de 3 pontos."); return; }
+  const reg=regressaoLinear(sub);
+  if(!Number.isFinite(reg.r2)){ setStatus("R² não calculável."); return; }
+  currentFit={...reg,t_ini:t0,t_fim:tf,metodo:"manual"};
+  $("lastFit").textContent=`manual R²=${reg.r2.toFixed(4)}`;
   fillKPIs(currentFit);
-  setStatus(`Manual OK: R²=${reg.r2.toFixed(4)} | t=[${t0}, ${tf}] | n=${reg.n}`);
+  setStatus(`Manual OK: R²=${reg.r2.toFixed(4)} | t=[${t0},${tf}] | n=${reg.n}`);
   draw();
 }
 
 function fillKPIs(f){
   $("k_r2").textContent = Number.isFinite(f.r2) ? f.r2.toFixed(4) : "—";
-  $("k_slope").textContent = fmt(f.slope, 6);
-  $("k_int").textContent = fmt(f.intercept, 6);
+  $("k_slope").textContent = fmt(f.slope,6);
+  $("k_int").textContent = fmt(f.intercept,6);
   $("k_win").textContent = `${f.t_ini} – ${f.t_fim}`;
 }
 
 function saveFit(){
-  if(!currentFit){ setStatus("Faça um ajuste (auto ou manual) antes de salvar."); return; }
-  const obs = $("obsFit").value || "";
-  const out = {
-    ...currentFit,
-    obs,
+  if(!currentFit){ setStatus("Faça um ajuste antes."); return; }
+  const obs=$("obsFit").value||"";
+  const out={
+    id: cryptoId(),
     saved_at: new Date().toISOString(),
-    n_total: getSeries().length
+    metodo: currentFit.metodo,
+    n: currentFit.n,
+    n_total: getSeries().length,
+    slope: currentFit.slope,
+    intercept: currentFit.intercept,
+    r2: currentFit.r2,
+    t_ini: currentFit.t_ini,
+    t_fim: currentFit.t_fim,
+    obs,
+    source:"github"
   };
   fits.push(out);
   saveJSON(KEY_FITS, fits);
-  setStatus(`Resultado salvo (${fits.length} total).`);
+  setStatus(`Resultado salvo local (${fits.length}).`);
 }
 
-function exportResultadosCSV(){
-  if(!fits.length){ setStatus("Sem resultados salvos."); return; }
-  const header = ["saved_at","metodo","n","n_total","slope","intercept","R2","t_ini","t_fim","obs"];
-  const lines = [header.join(",")];
-  for(const r of fits){
-    const row = [
-      r.saved_at, r.metodo, r.n, r.n_total,
-      r.slope, r.intercept, r.r2, r.t_ini, r.t_fim,
-      (r.obs||"").replace(/"/g,'""')
-    ].map(v => `"${String(v)}"`).join(",");
-    lines.push(row);
-  }
-  downloadFile("co2play_resultados.csv", lines.join("\n"), "text/csv");
-  setStatus("CSV de resultados baixado ✅");
-}
-
-function exportDB(){
-  const payload = { db, fits, exported_at: new Date().toISOString(), version:"v1" };
-  downloadFile("co2play_banco.json", JSON.stringify(payload,null,2), "application/json");
-  setStatus("Banco JSON baixado ✅");
-}
-
-function importDB(){
-  $("filejson").click();
-  $("filejson").onchange = async (e)=>{
-    const f = e.target.files?.[0];
-    if(!f) return;
-    const text = await f.text();
-    try{
-      const payload = JSON.parse(text);
-      if(payload.db) db = payload.db;
-      if(payload.fits) fits = payload.fits;
-      saveJSON(KEY_DB, db);
-      saveJSON(KEY_FITS, fits);
-      setStatus("Banco importado ✅");
-      refresh();
-    }catch(err){
-      setStatus("Erro ao importar JSON: " + err.message);
-    }finally{
-      $("filejson").value = "";
-    }
-  }
-}
-
-function resetDB(){
-  if(!confirm("Resetar tudo? Isso apaga banco local e resultados salvos neste navegador.")) return;
-  db = []; fits = []; currentFit = null;
-  localStorage.removeItem(KEY_DB);
-  localStorage.removeItem(KEY_FITS);
-  $("lastFit").textContent = "sem ajuste";
-  $("k_r2").textContent = $("k_slope").textContent = $("k_int").textContent = $("k_win").textContent = "—";
-  setStatus("Reset OK.");
-  refresh();
-}
-
-function downloadFile(filename, content, mime){
-  const blob = new Blob([content], {type:mime});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-/*** CSV import/export ***/
-function downloadModelo(){
-  const lines = [
-    "Data,Hora_inicio,Hora_fim,Tempo_s,CO2_ppm,Obs",
-    "2026-01-29,09:10:00,09:12:00,0,412.1,inicio",
-    "2026-01-29,09:10:00,09:12:00,5,412.8,",
-    "2026-01-29,09:10:00,09:12:00,10,413.6,"
-  ];
-  downloadFile("modelo_co2play.csv", lines.join("\n"), "text/csv");
-  setStatus("Modelo CSV baixado ✅");
-}
-
-function importCSV(){
-  const file = $("file").files?.[0];
-  if(!file){ setStatus("Escolha um CSV primeiro."); return; }
-  const reader = new FileReader();
-  reader.onload = () => {
-    try{
-      const text = reader.result;
-      const rows = parseCSV(text);
-      // espera cabeçalho
-      if(rows.length < 2){ setStatus("CSV vazio."); return; }
-      const head = rows[0].map(h=>h.trim());
-      const idx = {
-        date: head.indexOf("Data"),
-        hini: head.indexOf("Hora_inicio"),
-        hfim: head.indexOf("Hora_fim"),
-        t: head.indexOf("Tempo_s"),
-        co2: head.indexOf("CO2_ppm"),
-        obs: head.indexOf("Obs"),
-      };
-      if(idx.t<0 || idx.co2<0){
-        setStatus("CSV inválido: precisa de Tempo_s e CO2_ppm.");
-        return;
-      }
-      let added=0;
-      for(let i=1;i<rows.length;i++){
-        const r = rows[i];
-        if(!r || !r.length) continue;
-        const t = Number(r[idx.t]);
-        const co2 = Number(r[idx.co2]);
-        if(!Number.isFinite(t) || !Number.isFinite(co2)) continue;
-        db.push({
-          date: idx.date>=0 ? r[idx.date] : "",
-          hini: idx.hini>=0 ? r[idx.hini] : "",
-          hfim: idx.hfim>=0 ? r[idx.hfim] : "",
-          t, co2,
-          obs: idx.obs>=0 ? r[idx.obs] : "",
-          ts: Date.now()
-        });
-        added++;
-      }
-      db.sort((a,b)=>a.t-b.t);
-      saveJSON(KEY_DB, db);
-      setStatus(`CSV importado: ${added} ponto(s) ✅`);
-      $("file").value = "";
-      refresh();
-    }catch(err){
-      setStatus("Erro ao importar CSV: " + err.message);
-    }
-  };
-  reader.readAsText(file);
-}
-
-function parseCSV(text){
-  // parser simples (suporta aspas)
-  const rows = [];
-  let row = [], cur = "", inQuotes=false;
-  for(let i=0;i<text.length;i++){
-    const ch = text[i];
-    if(ch === '"'){
-      if(inQuotes && text[i+1] === '"'){ cur += '"'; i++; }
-      else inQuotes = !inQuotes;
-    } else if(ch === ',' && !inQuotes){
-      row.push(cur); cur="";
-    } else if((ch === '\n' || ch === '\r') && !inQuotes){
-      if(cur!=="" || row.length){ row.push(cur); rows.push(row); }
-      row=[]; cur="";
-      // pula CRLF
-      if(ch === '\r' && text[i+1] === '\n') i++;
-    } else {
-      cur += ch;
-    }
-  }
-  if(cur!=="" || row.length){ row.push(cur); rows.push(row); }
-  return rows;
-}
-
-/*** Gráfico canvas (pontos + linha ajuste) ***/
 function draw(){
-  const cv = $("cv");
-  const ctx = cv.getContext("2d");
-  const w = cv.width, h = cv.height;
+  const cv=$("cv"), ctx=cv.getContext("2d");
+  const w=cv.width, h=cv.height;
   ctx.clearRect(0,0,w,h);
-
-  // fundo leve
-  ctx.fillStyle = "rgba(255,255,255,0.02)";
+  ctx.fillStyle="rgba(255,255,255,0.02)";
   ctx.fillRect(0,0,w,h);
 
-  const series = getSeries();
+  const series=getSeries();
   if(series.length<2){
-    drawText(ctx, "Sem pontos suficientes para gráfico.", 24, 40);
+    ctx.fillStyle="rgba(233,241,255,0.9)"; ctx.font="14px system-ui";
+    ctx.fillText("Sem pontos suficientes para gráfico.", 24, 40);
     return;
   }
+  const tMin=series[0][0], tMax=series[series.length-1][0];
+  let yMin=Math.min(...series.map(d=>d[1])), yMax=Math.max(...series.map(d=>d[1]));
+  if(yMin===yMax){ yMin-=1; yMax+=1; }
 
-  const tMin = series[0][0], tMax = series[series.length-1][0];
-  let yMin = Math.min(...series.map(d=>d[1]));
-  let yMax = Math.max(...series.map(d=>d[1]));
-  if(yMin === yMax){ yMin -= 1; yMax += 1; }
+  const pad={l:60,r:18,t:18,b:46};
+  const X=t=>pad.l+(t-tMin)/(tMax-tMin)*(w-pad.l-pad.r);
+  const Y=y=>pad.t+(yMax-y)/(yMax-yMin)*(h-pad.t-pad.b);
 
-  const pad = {l:60,r:18,t:18,b:46};
-  const X = t => pad.l + (t - tMin) / (tMax - tMin) * (w - pad.l - pad.r);
-  const Y = y => pad.t + (yMax - y) / (yMax - yMin) * (h - pad.t - pad.b);
-
-  // eixos
-  ctx.strokeStyle = "rgba(255,255,255,0.12)";
-  ctx.lineWidth = 1;
+  ctx.strokeStyle="rgba(255,255,255,0.12)";
+  ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,h-pad.b); ctx.lineTo(w-pad.r,h-pad.b); ctx.stroke();
 
-  // ticks
-  ctx.fillStyle = "rgba(255,255,255,0.45)";
-  ctx.font = "12px system-ui";
-  ctx.fillText(`Tempo_s`, w/2 - 26, h-16);
-  ctx.save();
-  ctx.translate(18, h/2 + 20);
-  ctx.rotate(-Math.PI/2);
-  ctx.fillText(`CO2_ppm`, 0, 0);
-  ctx.restore();
+  ctx.fillStyle="rgba(255,255,255,0.45)";
+  ctx.font="12px system-ui";
+  ctx.fillText("Tempo_s", w/2-26, h-16);
+  ctx.save(); ctx.translate(18,h/2+20); ctx.rotate(-Math.PI/2); ctx.fillText("CO2_ppm",0,0); ctx.restore();
 
-  // pontos
-  ctx.fillStyle = "rgba(59,130,246,0.95)";
-  for(const [t,y] of series){
-    const x = X(t), yy = Y(y);
-    ctx.beginPath(); ctx.arc(x,yy,4,0,Math.PI*2); ctx.fill();
-  }
+  ctx.fillStyle="rgba(59,130,246,0.95)";
+  for(const [t,y] of series){ const x=X(t), yy=Y(y); ctx.beginPath(); ctx.arc(x,yy,4,0,Math.PI*2); ctx.fill(); }
 
-  // ajuste
   if(currentFit && Number.isFinite(currentFit.slope)){
-    const t0 = currentFit.t_ini, tf = currentFit.t_fim;
-    const x0 = X(t0), xf = X(tf);
-    const y0 = Y(currentFit.slope*t0 + currentFit.intercept);
-    const yf = Y(currentFit.slope*tf + currentFit.intercept);
+    const t0=currentFit.t_ini, tf=currentFit.t_fim;
+    const x0=X(t0), xf=X(tf);
+    const y0=Y(currentFit.slope*t0+currentFit.intercept);
+    const yf=Y(currentFit.slope*tf+currentFit.intercept);
 
-    // faixa do intervalo
-    ctx.fillStyle = "rgba(34,197,94,0.08)";
+    ctx.fillStyle="rgba(34,197,94,0.08)";
     ctx.fillRect(Math.min(x0,xf), pad.t, Math.abs(xf-x0), h-pad.t-pad.b);
 
-    // linha
-    ctx.strokeStyle = "rgba(34,197,94,0.95)";
-    ctx.lineWidth = 3;
+    ctx.strokeStyle="rgba(34,197,94,0.95)";
+    ctx.lineWidth=3;
     ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(xf,yf); ctx.stroke();
 
-    drawText(ctx, `Ajuste: ${currentFit.metodo} | R²=${Number(currentFit.r2).toFixed(4)} | n=${currentFit.n}`, pad.l+8, pad.t+18);
-  } else {
-    drawText(ctx, "Sem ajuste (rode Auto ou Manual).", pad.l+8, pad.t+18);
+    ctx.fillStyle="rgba(233,241,255,0.92)";
+    ctx.font="14px system-ui";
+    ctx.fillText(`Ajuste: ${currentFit.metodo} | R²=${Number(currentFit.r2).toFixed(4)} | n=${currentFit.n}`, pad.l+8, pad.t+18);
   }
 }
 
-function drawText(ctx, text, x, y){
-  ctx.fillStyle = "rgba(233,241,255,0.92)";
-  ctx.font = "14px system-ui";
-  ctx.fillText(text, x, y);
+/* ============ SYNC (GitHub ↔ Web App) ============ */
+
+function saveApi(){
+  const url=$("apiUrl").value.trim();
+  const token=$("apiToken").value.trim();
+  saveJSON(KEY_API, {url, token});
+  setStatus("URL/Token salvos no navegador ✅");
 }
 
-/*** init defaults ***/
-(function init(){
-  // set date/time defaults
-  const now = new Date();
-  $("date").value = now.toISOString().slice(0,10);
+function getApi(){
+  const api=loadJSON(KEY_API,{});
+  const url=($("apiUrl").value||api.url||"").trim();
+  const token=($("apiToken").value||api.token||"").trim();
+  return {url, token};
+}
+
+async function ping(){
+  try{
+    const {url}=getApi();
+    if(!url) return setStatus("Defina a URL do Web App.");
+    const r = await fetch(`${url}?action=ping`, { method:"GET" });
+    const j = await r.json();
+    setStatus("Ping: " + JSON.stringify(j, null, 2));
+  }catch(e){
+    setStatus("Erro ping: " + e.message);
+  }
+}
+
+async function syncUp(){
+  try{
+    const {url, token}=getApi();
+    if(!url) return setStatus("Defina a URL do Web App.");
+    if(!token) return setStatus("Defina o TOKEN.");
+
+    // envia tudo (append no Sheets)
+    const payload = { action:"push", token, db, fits };
+    setStatus("Enviando para o Sheets (push)...");
+
+    const r = await fetch(url, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify(payload)
+    });
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.error || "push falhou");
+    setStatus("Sync UP OK ✅\n" + JSON.stringify(j, null, 2));
+  }catch(e){
+    setStatus("Erro Sync UP: " + e.message);
+  }
+}
+
+async function syncDown(){
+  try{
+    const {url, token}=getApi();
+    if(!url) return setStatus("Defina a URL do Web App.");
+    if(!token) return setStatus("Defina o TOKEN.");
+
+    setStatus("Baixando do Sheets (pull)...");
+    const r = await fetch(`${url}?action=pull&token=${encodeURIComponent(token)}`, { method:"GET" });
+    const j = await r.json();
+    if(!j.ok) throw new Error(j.error || "pull falhou");
+
+    // substitui local pelo remoto (você pode mudar para "merge" depois)
+    db = Array.isArray(j.db) ? j.db : [];
+    fits = Array.isArray(j.fits) ? j.fits : [];
+    saveJSON(KEY_DB, db);
+    saveJSON(KEY_FITS, fits);
+
+    setStatus(`Sync DOWN OK ✅\nDB=${db.length} | FITS=${fits.length}`);
+    refresh();
+  }catch(e){
+    setStatus("Erro Sync DOWN: " + e.message);
+  }
+}
+
+function resetLocal(){
+  if(!confirm("Resetar tudo local?")) return;
+  db=[]; fits=[]; currentFit=null;
+  localStorage.removeItem(KEY_DB);
+  localStorage.removeItem(KEY_FITS);
+  setStatus("Reset local OK.");
   refresh();
-})();
+}
+
+/* ============ Util ============ */
+
+function cryptoId(){
+  // id simples e estável; suficiente pro seu fluxo
+  return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+}
+
+init();
 </script>
 </body>
 </html>
