@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>CO2-Play — Curvas, Ajuste e Fluxo (Offline)</title>
+  <title>CO2-Play — Upload Excel → Curva → Melhor R² → Fluxo</title>
 
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -60,7 +60,6 @@
     .kpi{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:14px;padding:10px}
     .kpi .v{font-size:16px;font-weight:950}
     .kpi .k{font-size:11px;color:var(--muted);margin-top:2px}
-    .small{font-size:11px;color:var(--muted)}
     table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);
       border-radius:14px;background:rgba(11,20,43,.7);overflow:hidden}
     th,td{font-size:12px;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
@@ -73,8 +72,8 @@
 <header>
   <div class="top">
     <div class="brand">
-      <h1>CO2-Play — Curvas, Ajuste e Fluxo</h1>
-      <p>Upload Excel → curva → melhor janela (R²) → fluxo → exportar.</p>
+      <h1>CO2-Play — Curva, Melhor R² e Fluxo</h1>
+      <p>Agora as colunas são escolhidas por A/B/C… (não quebra com cabeçalho duplicado).</p>
     </div>
     <div class="pill" id="fileInfo">sem arquivo</div>
   </div>
@@ -82,71 +81,68 @@
 
 <main>
   <div class="grid">
+
     <section class="card">
-      <div class="hd"><h2>1) Upload e Curva</h2><span class="pill" id="ptsInfo">0 pontos</span></div>
+      <div class="hd">
+        <h2>1) Upload e Curva</h2>
+        <span class="pill" id="ptsInfo">0 pontos</span>
+      </div>
       <div class="bd">
         <label>Arquivo Excel (.xlsx/.xls)</label>
         <input id="file" type="file" accept=".xlsx,.xls"/>
 
         <div class="row">
           <div class="col">
-            <label>Aba (sheet)</label>
+            <label>Aba</label>
             <select id="sheet"></select>
           </div>
           <div class="col">
-            <label>Header (linha do cabeçalho)</label>
+            <label>Linha do cabeçalho</label>
             <input id="headerRow" type="number" value="1" min="1"/>
           </div>
         </div>
 
         <div class="row">
           <div class="col">
-            <label>Coluna de Tempo (segundos)</label>
+            <label>Tempo (segundos)</label>
             <select id="colT"></select>
-            <div class="small">No seu arquivo, normalmente é <b>time2</b> ou <b>seconds</b>.</div>
+            <div class="pill" id="hintT">dica: normalmente C — time2</div>
           </div>
           <div class="col">
-            <label>Coluna de CO₂ (ppm)</label>
+            <label>CO₂ (ppm)</label>
             <select id="colC"></select>
-            <div class="small">No seu arquivo, é <b>CO2(ppm)</b> (a coluna do sensor).</div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col">
-            <label>(Opcional) Coluna de Grupo</label>
-            <select id="colGroup"></select>
-            <div class="small">Ex.: Camara / Local / Replicates</div>
-          </div>
-          <div class="col">
-            <label>(Opcional) Coluna de Hora</label>
-            <select id="colClock"></select>
-            <div class="small">Ex.: Date / time (hora do dia)</div>
+            <div class="pill" id="hintC">dica: normalmente F — CO2(ppm)</div>
           </div>
         </div>
 
         <div class="btns">
-          <button class="ghost" id="btnGuess">Auto-detectar (inteligente)</button>
+          <button class="ghost" id="btnGuess">Auto-detectar</button>
           <button class="b-blue" id="btnLoad">Carregar curva</button>
+          <button class="ghost" id="btnDiag">Diagnóstico</button>
         </div>
 
-        <div class="status" id="status">Suba o Excel → clique “Auto-detectar (inteligente)” → “Carregar curva”.</div>
+        <div class="status" id="status">Suba o arquivo → Auto-detectar → Carregar curva.</div>
+
         <div style="margin-top:12px"><canvas id="chart"></canvas></div>
+
+        <div style="margin-top:10px;max-height:220px;overflow:auto">
+          <table>
+            <thead><tr><th>t (s)</th><th>CO₂ (ppm)</th></tr></thead>
+            <tbody id="preview"></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
     <aside class="card">
-      <div class="hd"><h2>2) Ajuste e Fluxo</h2><span class="pill" id="fitInfo">sem ajuste</span></div>
+      <div class="hd">
+        <h2>2) Melhor R² e Fluxo</h2>
+        <span class="pill" id="fitInfo">sem ajuste</span>
+      </div>
       <div class="bd">
         <div class="row">
-          <div class="col">
-            <label>Janela mínima (s)</label>
-            <input id="wmin" type="number" value="60" min="5" step="1"/>
-          </div>
-          <div class="col">
-            <label>Passo (s)</label>
-            <input id="step" type="number" value="5" min="1" step="1"/>
-          </div>
+          <div class="col"><label>Janela mínima (s)</label><input id="wmin" type="number" value="60" min="5"/></div>
+          <div class="col"><label>Passo (s)</label><input id="step" type="number" value="5" min="1"/></div>
         </div>
 
         <div class="btns">
@@ -176,7 +172,7 @@
           <div class="col"><label>A (m²)</label><input id="A" type="number" value="0.070" step="0.0001"/></div>
         </div>
         <div class="row">
-          <div class="col"><label>P (Pa)</label><input id="P" type="number" value="101325" step="1"/></div>
+          <div class="col"><label>P (Pa)</label><input id="P" type="number" value="101325"/></div>
           <div class="col"><label>T (°C)</label><input id="T" type="number" value="25" step="0.1"/></div>
         </div>
 
@@ -184,143 +180,191 @@
           <button class="b-orange" id="btnRecalcFlux">Recalcular fluxo</button>
         </div>
 
-        <div class="status" id="status2">Se o ajuste não aparecer, é porque o tempo/CO₂ foram escolhidos errado. Use time2 + CO2(ppm).</div>
+        <div class="status" id="status2">Se não aparecer pontos, escolha explicitamente: <b>C — time2</b> e <b>F — CO2(ppm)</b>.</div>
       </div>
     </aside>
+
   </div>
 </main>
 
 <script>
-let wb=null, series=[], chart=null, currentFit=null;
-
+let wb=null, cols=[], colIdToIdx=new Map(), series=[], chart=null, currentFit=null;
 const $=id=>document.getElementById(id);
-const pill=(id,msg)=>$(id).textContent=msg;
-const setStatus=(m)=>$("status").textContent=m;
+const setStatus=m=>$("status").textContent=m;
+const pill=(id,m)=>$(id).textContent=m;
 
 function toNum(x){
-  const n=Number(x);
-  return Number.isFinite(n)?n:NaN;
+  const n = Number(x);
+  return Number.isFinite(n) ? n : NaN;
 }
-function escapeHtml(s){
+function colLetter(i){
+  let n=i+1, s="";
+  while(n>0){ const r=(n-1)%26; s=String.fromCharCode(65+r)+s; n=Math.floor((n-1)/26); }
+  return s;
+}
+function esc(s){
   return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
-}
-function fillSelect(select, header, allowNone=false){
-  const opts = [];
-  if(allowNone) opts.push(`<option value="">(nenhuma)</option>`);
-  for(const h of header) opts.push(`<option value="${escapeHtml(h)}">${escapeHtml(h)}</option>`);
-  select.innerHTML = opts.join("");
 }
 
 $("file").addEventListener("change", async (ev)=>{
   const f=ev.target.files?.[0];
   if(!f) return;
   const buf=await f.arrayBuffer();
-  wb=XLSX.read(buf, {type:"array"});
-  $("sheet").innerHTML = wb.SheetNames.map(n=>`<option>${escapeHtml(n)}</option>`).join("");
+  wb=XLSX.read(buf,{type:"array"});
+  $("sheet").innerHTML = wb.SheetNames.map(n=>`<option>${esc(n)}</option>`).join("");
   pill("fileInfo", f.name);
-  setStatus("Arquivo carregado. Clique “Auto-detectar (inteligente)” e depois “Carregar curva”.");
+  setStatus("Arquivo carregado. Clique Auto-detectar.");
 });
 
 $("btnGuess").addEventListener("click", ()=>{
   if(!wb) return setStatus("Suba um Excel primeiro.");
-  const sheetName=$("sheet").value;
-  const hrow=Math.max(1, Number($("headerRow").value||1));
-  const ws=wb.Sheets[sheetName];
-  const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:""});
-  const header=(rows[hrow-1]||[]).map(h=>String(h).trim());
-
-  fillSelect($("colT"), header, false);
-  fillSelect($("colC"), header, false);
-  fillSelect($("colGroup"), header, true);
-  fillSelect($("colClock"), header, true);
-
-  // Escolha inteligente: entre as colunas candidatas, pega a que tem mais números.
-  const data = rows.slice(hrow, hrow+80); // amostra
-  const scoreNumeric = (colName)=>{
-    const ix = header.indexOf(colName);
-    if(ix<0) return -1;
-    let ok=0, tot=0;
-    for(const r of data){
-      const v=r[ix];
-      if(v===null||v===undefined||v==="") continue;
-      tot++;
-      if(Number.isFinite(Number(v))) ok++;
-    }
-    return tot? ok/tot : -1;
-  };
-
-  // candidatos de tempo: preferir seconds/time2/tempo_s primeiro
-  const timeCandidates = header.filter(h=>/seconds|time2|tempo_s|tempo|sec/i.test(h));
-  const bestTime = pickBestByScore(timeCandidates, scoreNumeric);
-  if(bestTime) $("colT").value = bestTime;
-
-  // candidatos de CO2: CO2(ppm) primeiro, depois qualquer CO2
-  const co2Candidates = header.filter(h=>/^co2\(ppm\)$/i.test(h)).concat(header.filter(h=>/co2/i.test(h)));
-  const bestCO2 = pickBestByScore(unique(co2Candidates), scoreNumeric);
-  if(bestCO2) $("colC").value = bestCO2;
-
-  // grupo: camara/local/replicates
-  const groupCandidates = header.filter(h=>/camara|c[aâ]mara|local|replic|type/i.test(h));
-  if(groupCandidates[0]) $("colGroup").value = groupCandidates[0];
-
-  // hora: date/time (mas geralmente não é numérica)
-  const clockCandidates = header.filter(h=>/date|time$/i.test(h));
-  if(clockCandidates[0]) $("colClock").value = clockCandidates[0];
-
-  setStatus(`Auto-detect OK. Tempo=${bestTime||"(não achei)"} | CO2=${bestCO2||"(não achei)"}.
-Agora clique “Carregar curva”.`);
+  buildColumns();
+  autoPickColumns();
+  setStatus("Auto-detect feito. Clique Carregar curva.");
 });
-
-function unique(arr){
-  const out=[]; const s=new Set();
-  for(const a of arr){ if(!s.has(a)){ s.add(a); out.push(a); } }
-  return out;
-}
-function pickBestByScore(cands, scoreFn){
-  let best="", bestScore=-1;
-  for(const c of cands){
-    const sc=scoreFn(c);
-    if(sc>bestScore){ best=c; bestScore=sc; }
-  }
-  return bestScore>0.5 ? best : ""; // exige maioria numérica
-}
 
 $("btnLoad").addEventListener("click", ()=>{
   if(!wb) return setStatus("Suba um Excel primeiro.");
-  const sheetName=$("sheet").value;
+  if(!cols.length) buildColumns();
+  loadCurve();
+});
+
+$("btnDiag").addEventListener("click", ()=>{
+  if(!wb) return setStatus("Suba um Excel primeiro.");
+  if(!cols.length) buildColumns();
+  const msg = [
+    `Aba: ${$("sheet").value}`,
+    `Header row: ${$("headerRow").value}`,
+    `Tempo selecionado: ${$("colT").value}`,
+    `CO2 selecionado: ${$("colC").value}`,
+    `Pontos carregados: ${series.length}`
+  ].join("\n");
+  setStatus(msg);
+});
+
+function buildColumns(){
+  const sheet=$("sheet").value;
   const hrow=Math.max(1, Number($("headerRow").value||1));
-  const colT=$("colT").value;
-  const colC=$("colC").value;
-
-  const ws=wb.Sheets[sheetName];
+  const ws=wb.Sheets[sheet];
   const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:""});
-  const header=(rows[hrow-1]||[]).map(h=>String(h).trim());
+  const header=(rows[hrow-1]||[]).map(h=>String(h??"").trim());
 
-  const ixT=header.indexOf(colT);
-  const ixC=header.indexOf(colC);
-  if(ixT<0 || ixC<0) return setStatus("Selecione corretamente Tempo (segundos) e CO₂.");
+  cols = header.map((name,i)=>({
+    idx:i,
+    id:`c${i}`,
+    name: name || `(col ${colLetter(i)})`
+  }));
+  colIdToIdx = new Map(cols.map(c=>[c.id,c.idx]));
+
+  const opts = cols.map(c=>`<option value="${esc(c.id)}">${esc(colLetter(c.idx))} — ${esc(c.name)}</option>`).join("");
+  $("colT").innerHTML = opts;
+  $("colC").innerHTML = opts;
+}
+
+function scoreNumeric(colIdx){
+  const sheet=$("sheet").value;
+  const hrow=Math.max(1, Number($("headerRow").value||1));
+  const ws=wb.Sheets[sheet];
+  const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:""});
+  const data = rows.slice(hrow, hrow+120);
+  let ok=0, tot=0;
+  for(const r of data){
+    const v=r[colIdx];
+    if(v===null||v===undefined||v==="") continue;
+    tot++;
+    if(Number.isFinite(Number(v))) ok++;
+  }
+  return tot? ok/tot : 0;
+}
+
+function autoPickColumns(){
+  // Heurística forte pro seu Excel:
+  // Tempo: preferir colunas cujo nome pareça time2/seconds e sejam majoritariamente numéricas.
+  // CO2: preferir nome CO2(ppm) e numérica.
+  let bestT=null, bestC=null;
+
+  for(const c of cols){
+    const nm=c.name.toLowerCase();
+    const sc=scoreNumeric(c.idx);
+
+    // tempo
+    const tBonus = (/(time2|seconds|tempo_s|sec)/.test(nm) ? 2 : /(time|tempo)/.test(nm) ? 1 : 0);
+    const tScore = sc + tBonus;
+    if(!bestT || tScore>bestT.tScore) bestT={id:c.id, tScore, sc, nm};
+
+    // co2
+    const cBonus = (/^co2\(ppm\)$/.test(nm) ? 2 : /co2/.test(nm) ? 1 : 0);
+    const cScore = sc + cBonus;
+    if(!bestC || cScore>bestC.cScore) bestC={id:c.id, cScore, sc, nm};
+  }
+
+  if(bestT) $("colT").value = bestT.id;
+  if(bestC) $("colC").value = bestC.id;
+
+  // dicas visuais
+  $("hintT").textContent = `auto: ${labelOf(bestT?.id)} (num=${(bestT?.sc||0).toFixed(2)})`;
+  $("hintC").textContent = `auto: ${labelOf(bestC?.id)} (num=${(bestC?.sc||0).toFixed(2)})`;
+}
+
+function labelOf(colId){
+  const idx = colIdToIdx.get(colId);
+  const c = cols.find(x=>x.id===colId);
+  if(idx===undefined || !c) return "(?)";
+  return `${colLetter(idx)} — ${c.name}`;
+}
+
+function loadCurve(){
+  const sheet=$("sheet").value;
+  const hrow=Math.max(1, Number($("headerRow").value||1));
+  const ws=wb.Sheets[sheet];
+  const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:""});
+  const tIdx = colIdToIdx.get($("colT").value);
+  const cIdx = colIdToIdx.get($("colC").value);
+
+  if(tIdx===undefined || cIdx===undefined){
+    setStatus("Selecione Tempo e CO2.");
+    return;
+  }
 
   series=[];
   for(const r of rows.slice(hrow)){
-    const t=toNum(r[ixT]);
-    const c=toNum(r[ixC]);
+    const t=toNum(r[tIdx]);
+    const c=toNum(r[cIdx]);
     if(!Number.isFinite(t) || !Number.isFinite(c)) continue;
     series.push({t,c});
   }
   series.sort((a,b)=>a.t-b.t);
 
   pill("ptsInfo", `${series.length} pontos`);
+  renderPreview();
+
   if(series.length<3){
-    setStatus("Não encontrei pontos numéricos. No seu arquivo, use tempo = time2 (ou seconds) e CO₂ = CO2(ppm).");
+    setStatus(
+      "Não achei pontos numéricos suficientes.\n" +
+      "Na sua planilha, escolha explicitamente:\n" +
+      "Tempo = C — time2\nCO2 = F — CO2(ppm)\n" +
+      "e clique Carregar curva novamente."
+    );
     drawChart(null);
     resetFit();
     return;
   }
 
-  setStatus(`Curva carregada ✅ (Tempo=${colT} | CO₂=${colC}). Agora clique “Melhor reta (R² máximo)”.`);
+  setStatus(`Curva OK ✅ Tempo=${labelOf($("colT").value)} | CO2=${labelOf($("colC").value)}.\nAgora clique “Melhor reta (R² máximo)”.`);
   drawChart(null);
   resetFit();
-});
+}
+
+function renderPreview(){
+  const tb=$("preview");
+  tb.innerHTML="";
+  const show = series.slice(0,8).concat(series.length>12 ? [{t:"…",c:"…"}] : []).concat(series.slice(-4));
+  for(const p of show){
+    const tr=document.createElement("tr");
+    tr.innerHTML = `<td>${esc(p.t)}</td><td>${esc(p.c)}</td>`;
+    tb.appendChild(tr);
+  }
+}
 
 function drawChart(fit){
   const ctx=$("chart").getContext("2d");
@@ -329,7 +373,6 @@ function drawChart(fit){
     data: series.map(p=>({x:p.t,y:p.c})),
     pointRadius:3, showLine:false
   }];
-
   if(fit && Number.isFinite(fit.slope)){
     const t0=fit.t_ini, tf=fit.t_fim;
     ds.push({
@@ -338,19 +381,19 @@ function drawChart(fit){
       pointRadius:0, showLine:true, borderWidth:3
     });
   }
-
   if(chart) chart.destroy();
   chart=new Chart(ctx,{
     type:"scatter",
     data:{datasets:ds},
     options:{
       responsive:true, maintainAspectRatio:false, parsing:false,
-      scales:{ x:{title:{display:true,text:"Tempo (s)"}}, y:{title:{display:true,text:"CO₂ (ppm)"} } },
+      scales:{ x:{title:{display:true,text:"Tempo (s)"}}, y:{title:{display:true,text:"CO₂ (ppm)"}} },
       plugins:{ legend:{labels:{color:"#eaf1ff"}} }
     }
   });
 }
 
+/* ===== regressão ===== */
 function linearRegression(sub){
   const n=sub.length;
   const x=sub.map(p=>p.t), y=sub.map(p=>p.c);
@@ -428,7 +471,7 @@ function applyFit(fit){
 
 function recalcFlux(){
   if(!currentFit || !Number.isFinite(currentFit.slope)) return;
-  const slope=currentFit.slope; // ppm/s
+  const slope=currentFit.slope;
   const V=toNum($("V").value), A=toNum($("A").value), P=toNum($("P").value), T=toNum($("T").value);
   if(![V,A,P,T].every(Number.isFinite) || V<=0 || A<=0 || P<=0) return;
 
