@@ -3,146 +3,720 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>CO2-Play — Direct to Sheets</title>
+  <title>CO2-Play — Curvas, Ajuste e Fluxo (Offline)</title>
+
+  <!-- SheetJS (ler/escrever Excel) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Chart.js (gráfico) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
   <style>
-    body{font-family:system-ui,Arial;margin:0;background:#0b1220;color:#eaf1ff}
-    .wrap{max-width:980px;margin:0 auto;padding:16px}
-    .card{background:#111b33;border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;margin-bottom:14px}
-    label{display:block;color:#a7b8de;font-size:12px;margin:10px 0 6px}
-    input,textarea{width:100%;padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:#0b142b;color:#eaf1ff}
-    textarea{min-height:70px}
+    :root{
+      --bg:#070b16; --card:#0f1a33; --line:rgba(255,255,255,.10);
+      --text:#eaf1ff; --muted:#a7b8de;
+      --blue:#3b82f6; --green:#22c55e; --orange:#f97316; --pink:#ec4899; --red:#ef4444;
+      --shadow:0 18px 48px rgba(0,0,0,.35); --r:18px;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;color:var(--text);
+      background:radial-gradient(900px 500px at 30% -10%, rgba(59,130,246,.28), transparent 60%),
+               radial-gradient(800px 500px at 90% 10%, rgba(236,72,153,.22), transparent 60%),
+               radial-gradient(900px 700px at 50% 110%, rgba(34,197,94,.18), transparent 60%),
+               linear-gradient(180deg, #050812, var(--bg));
+    }
+    header{position:sticky;top:0;z-index:2;backdrop-filter:blur(10px);
+      background:rgba(7,11,22,.70); border-bottom:1px solid var(--line);}
+    .top{max-width:1200px;margin:0 auto;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .brand h1{margin:0;font-size:16px}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+    main{max-width:1200px;margin:0 auto;padding:14px}
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
+    @media(max-width:980px){.grid{grid-template-columns:1fr}}
+    .card{background:rgba(15,26,51,.92); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden;}
+    .hd{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), transparent); border-bottom:1px solid var(--line);}
+    .hd h2{margin:0;font-size:14px}
+    .bd{padding:14px}
+    label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px}
+    input, select, textarea{width:100%;padding:10px 12px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);color:var(--text);outline:none;}
+    textarea{min-height:70px;resize:vertical}
     .row{display:flex;gap:10px;flex-wrap:wrap}
     .col{flex:1;min-width:180px}
-    button{border:0;border-radius:12px;padding:10px 12px;font-weight:800;cursor:pointer}
-    .b1{background:#22c55e}
-    .b2{background:#3b82f6;color:white}
-    .status{margin-top:10px;color:#a7b8de;font-size:12px;white-space:pre-wrap}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    button{border:0;border-radius:14px;padding:10px 12px;font-weight:900;cursor:pointer;color:#071022;
+      box-shadow:0 12px 26px rgba(0,0,0,.30); transition:transform .06s ease;}
+    button:active{transform:scale(.98)}
+    .b-blue{background:linear-gradient(90deg,var(--blue),#60a5fa)}
+    .b-green{background:linear-gradient(90deg,var(--green),#86efac)}
+    .b-orange{background:linear-gradient(90deg,var(--orange),#fdba74)}
+    .b-pink{background:linear-gradient(90deg,var(--pink),#f9a8d4)}
+    .b-red{background:linear-gradient(90deg,var(--red),#fca5a5)}
+    .ghost{background:transparent;color:var(--text);border:1px solid var(--line);box-shadow:none}
+    .pill{display:inline-block;padding:3px 8px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03); font-size:12px; color:var(--muted)}
+    .status{margin-top:10px;padding:10px 12px;border-radius:14px;border:1px dashed var(--line);
+      background:rgba(255,255,255,.03);font-size:12px;color:var(--muted);white-space:pre-wrap}
+    canvas{width:100%;height:360px;background:rgba(7,11,22,.35);border:1px solid var(--line);border-radius:16px;}
+    table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);
+      border-radius:14px;background:rgba(11,20,43,.7);overflow:hidden}
+    th,td{font-size:12px;padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+    th{color:#cfe0ff;background:rgba(255,255,255,.03)}
+    tr:last-child td{border-bottom:none}
+    .small{font-size:11px;color:var(--muted)}
+    .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .kpi{border:1px solid var(--line);background:rgba(255,255,255,.03);border-radius:14px;padding:10px}
+    .kpi .v{font-size:16px;font-weight:950}
+    .kpi .k{font-size:11px;color:var(--muted);margin-top:2px}
   </style>
 </head>
+
 <body>
-<div class="wrap">
-  <h2>CO2-Play (GitHub → Sheets)</h2>
-
-  <div class="card">
-    <label>URL do Web App (/exec)</label>
-    <input id="url" value="https://script.google.com/macros/s/AKfycbw-pBQ2ZimGniiKI5d4Ql6UKYWTCvJYiLzARdnbZQ94bi7oKlxgRYuZKJFR8pu7X-A/exec">
-    <button class="b2" onclick="ping()">Ping</button>
-    <div class="status" id="st">Pronto.</div>
+<header>
+  <div class="top">
+    <div class="brand">
+      <h1>CO2-Play — Curvas, Ajuste e Fluxo</h1>
+      <p>Upload Excel → curva → melhor janela (R²) → ajuste manual → fluxo CO₂ → exportar.</p>
+    </div>
+    <div class="pill" id="fileInfo">sem arquivo</div>
   </div>
+</header>
 
-  <div class="card">
-    <h3>Salvar ponto (vai direto pra aba DB)</h3>
-    <div class="row">
-      <div class="col"><label>Data</label><input id="date" type="date"></div>
-      <div class="col"><label>Hora início</label><input id="hini" type="time" step="1"></div>
-      <div class="col"><label>Hora fim</label><input id="hfim" type="time" step="1"></div>
-    </div>
-    <div class="row">
-      <div class="col"><label>Tempo_s</label><input id="t" type="number" step="1"></div>
-      <div class="col"><label>CO2_ppm</label><input id="co2" type="number" step="0.01"></div>
-    </div>
-    <label>Obs</label><textarea id="obs"></textarea>
-    <button class="b1" onclick="savePoint()">Salvar ponto</button>
-  </div>
+<main>
+  <div class="grid">
 
-  <div class="card">
-    <h3>Salvar ajuste (vai direto pra aba FITS)</h3>
-    <div class="row">
-      <div class="col"><label>Método</label><input id="met" value="manual"></div>
-      <div class="col"><label>n</label><input id="n" type="number" step="1"></div>
-    </div>
-    <div class="row">
-      <div class="col"><label>Slope</label><input id="slope" type="number" step="0.000001"></div>
-      <div class="col"><label>Intercept</label><input id="intercept" type="number" step="0.000001"></div>
-      <div class="col"><label>R²</label><input id="r2" type="number" step="0.0001"></div>
-    </div>
-    <div class="row">
-      <div class="col"><label>t_ini</label><input id="t0" type="number" step="1"></div>
-      <div class="col"><label>t_fim</label><input id="tf" type="number" step="1"></div>
-    </div>
-    <label>Obs</label><textarea id="obsfit"></textarea>
-    <button class="b1" onclick="saveFit()">Salvar ajuste</button>
+    <!-- ESQUERDA: Upload + Curva -->
+    <section class="card">
+      <div class="hd">
+        <h2>1) Upload e Curva</h2>
+        <span class="pill" id="ptsInfo">0 pontos</span>
+      </div>
+      <div class="bd">
+        <label>Arquivo Excel (.xlsx/.xls)</label>
+        <input id="file" type="file" accept=".xlsx,.xls"/>
+
+        <div class="row">
+          <div class="col">
+            <label>Aba (sheet)</label>
+            <select id="sheet"></select>
+          </div>
+          <div class="col">
+            <label>Header (linha do cabeçalho)</label>
+            <input id="headerRow" type="number" value="1" min="1"/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>Coluna de Tempo (segundos)</label>
+            <select id="colT"></select>
+            <div class="small">Ex: Time / seconds / Tempo_s</div>
+          </div>
+          <div class="col">
+            <label>Coluna de CO₂ (ppm)</label>
+            <select id="colC"></select>
+            <div class="small">Ex: CO2(ppm) / CO2_ppm</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>(Opcional) Coluna de Hora</label>
+            <select id="colClock"></select>
+            <div class="small">Ex: Hora / Start / DateTime</div>
+          </div>
+          <div class="col">
+            <label>(Opcional) Coluna de Grupo</label>
+            <select id="colGroup"></select>
+            <div class="small">Se tiver múltiplas medições no mesmo arquivo</div>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button class="b-blue" id="btnLoad">Carregar curva</button>
+          <button class="ghost" id="btnGuess">Auto-detectar colunas</button>
+          <button class="b-orange" id="btnProjectSave">Salvar projeto (JSON)</button>
+          <button class="ghost" id="btnProjectLoad">Importar projeto</button>
+          <input id="projectFile" type="file" accept=".json" style="display:none"/>
+        </div>
+
+        <div class="status" id="status">Dica: primeiro suba o Excel, selecione a aba e clique “Auto-detectar colunas”.</div>
+
+        <div style="margin-top:12px">
+          <canvas id="chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIREITA: Ajuste + Variáveis + Resultados -->
+    <aside class="card">
+      <div class="hd">
+        <h2>2) Ajuste, Fluxo e Export</h2>
+        <span class="pill" id="fitInfo">sem ajuste</span>
+      </div>
+      <div class="bd">
+
+        <div class="row">
+          <div class="col">
+            <label>Janela mínima (s)</label>
+            <input id="wmin" type="number" value="60" min="5" step="1"/>
+          </div>
+          <div class="col">
+            <label>Passo de busca (s)</label>
+            <input id="step" type="number" value="5" min="1" step="1"/>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button class="b-green" id="btnAutoFit">Melhor reta (R² máximo)</button>
+          <button class="ghost" id="btnResetFit">Limpar ajuste</button>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>Manual: t_ini (s)</label>
+            <input id="t0" type="number" step="1"/>
+          </div>
+          <div class="col">
+            <label>Manual: t_fim (s)</label>
+            <input id="tf" type="number" step="1"/>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button class="b-blue" id="btnManualFit">Calcular (manual)</button>
+        </div>
+
+        <div class="kpis">
+          <div class="kpi"><div class="v" id="k_r2">—</div><div class="k">R²</div></div>
+          <div class="kpi"><div class="v" id="k_slope">—</div><div class="k">Slope (ppm/s)</div></div>
+          <div class="kpi"><div class="v" id="k_win">—</div><div class="k">Janela (s)</div></div>
+          <div class="kpi"><div class="v" id="k_flux">—</div><div class="k">Fluxo (mg m⁻² h⁻¹)</div></div>
+        </div>
+
+        <label>Obs do ajuste</label>
+        <textarea id="fitObs" placeholder="ex.: cortei 15s de delay, ruído no final..."></textarea>
+
+        <div style="height:1px;background:var(--line);margin:12px 0"></div>
+        <h3 style="margin:0 0 6px 0;font-size:13px;color:#cfe0ff">Variáveis do Fluxo (editáveis)</h3>
+        <div class="small">
+          Fórmula padrão (câmara): Fluxo = slope(ppm/s) × (P/(R·T)) × (V/A) × (MCO2) × 3600 × 1e-6 × 1000<br/>
+          Resultado: <b>mg m⁻² h⁻¹</b>.
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>V (volume da câmara) — m³</label>
+            <input id="V" type="number" value="0.010" step="0.0001"/>
+          </div>
+          <div class="col">
+            <label>A (área) — m²</label>
+            <input id="A" type="number" value="0.070" step="0.0001"/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>P (pressão) — Pa</label>
+            <input id="P" type="number" value="101325" step="1"/>
+          </div>
+          <div class="col">
+            <label>T (temperatura) — °C</label>
+            <input id="T" type="number" value="25" step="0.1"/>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button class="b-orange" id="btnRecalcFlux">Recalcular fluxo</button>
+          <button class="b-pink" id="btnSaveResult">Salvar resultado</button>
+        </div>
+
+        <div style="height:1px;background:var(--line);margin:12px 0"></div>
+        <h3 style="margin:0 0 6px 0;font-size:13px;color:#cfe0ff">Resultados salvos</h3>
+
+        <div class="btns">
+          <button class="b-blue" id="btnExportXLSX">Exportar XLSX</button>
+          <button class="ghost" id="btnExportCSV">Exportar CSV</button>
+          <button class="ghost" id="btnExportJSON">Exportar JSON</button>
+          <button class="b-red" id="btnClearResults">Limpar resultados</button>
+        </div>
+
+        <div style="margin-top:10px;max-height:260px;overflow:auto">
+          <table id="tblRes">
+            <thead>
+              <tr>
+                <th>grupo</th><th>slope</th><th>R²</th><th>t_ini</th><th>t_fim</th><th>fluxo</th><th>V</th><th>A</th><th>P</th><th>T</th><th>obs</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="status" id="statusR">Os resultados ficam no seu navegador (local). Exporte quando quiser.</div>
+      </div>
+    </aside>
+
   </div>
-</div>
+</main>
 
 <script>
-const st = document.getElementById("st");
+/* ========= Estado ========= */
+let wb=null;
+let rawRows=[];
+let series=[]; // [{t, c, clock, group, row}]
+let chart=null;
+let currentFit=null; // {slope, intercept, r2, n, t_ini, t_fim, group}
+let results = loadLocal("co2play_results_v1", []);
+const projectKey="co2play_project_v1";
+
+/* ========= Helpers ========= */
 const $ = id => document.getElementById(id);
+function setStatus(msg){ $("status").textContent = msg; }
+function setStatusR(msg){ $("statusR").textContent = msg; }
+function pill(id,msg){ $(id).textContent = msg; }
+function loadLocal(k, fb){ try{ return JSON.parse(localStorage.getItem(k)||"null") ?? fb; }catch(e){ return fb; } }
+function saveLocal(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+function dlBlob(blob, filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download=filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1500);
+}
+function isNum(x){ return Number.isFinite(Number(x)); }
+function toNum(x){ const n=Number(x); return Number.isFinite(n)?n:NaN; }
 
-function setStatus(s){ st.textContent = s; }
+/* ========= Excel Loading ========= */
+$("file").addEventListener("change", async (ev)=>{
+  const f=ev.target.files?.[0];
+  if(!f) return;
+  const buf=await f.arrayBuffer();
+  wb=XLSX.read(buf, {type:"array"});
+  $("sheet").innerHTML = wb.SheetNames.map(n=>`<option>${escapeHtml(n)}</option>`).join("");
+  pill("fileInfo", f.name);
+  setStatus("Arquivo carregado. Agora escolha a aba e clique Auto-detectar colunas.");
+});
 
-async function ping(){
-  try{
-    const url = $("url").value.trim();
-    const r = await fetch(url + "?action=ping");
-    const j = await r.json();
-    setStatus("Ping OK ✅ " + JSON.stringify(j));
-  }catch(e){
-    setStatus("Ping erro: " + e.message);
-  }
+$("btnGuess").addEventListener("click", ()=>{
+  if(!wb) return setStatus("Suba um Excel primeiro.");
+  const sheetName = $("sheet").value;
+  const hrow = Math.max(1, Number($("headerRow").value||1));
+  const ws = wb.Sheets[sheetName];
+  const rows = XLSX.utils.sheet_to_json(ws, {header:1, raw:true, defval:""});
+  const header = (rows[hrow-1]||[]).map(h=>String(h).trim());
+  fillColSelects(header);
+
+  // guess
+  const idx = (re) => header.findIndex(h=>re.test(h));
+  const it = idx(/time|tempo|second|sec|seconds/i);
+  const ic = idx(/co2/i);
+  const ih = idx(/hora|clock|start|end|datetime|date/i);
+  const ig = idx(/group|camara|c[aâ]mara|replicate|local|type|status/i);
+
+  if(it>=0) $("colT").value = header[it];
+  if(ic>=0) $("colC").value = header[ic];
+  if(ih>=0) $("colClock").value = header[ih];
+  if(ig>=0) $("colGroup").value = header[ig];
+
+  setStatus("Auto-detect concluído. Clique “Carregar curva”.");
+});
+
+$("btnLoad").addEventListener("click", ()=>{
+  if(!wb) return setStatus("Suba um Excel primeiro.");
+  loadCurveFromSheet();
+});
+
+function fillColSelects(header){
+  const opts = ['<option value="">(nenhuma)</option>']
+    .concat(header.map(h=>`<option value="${escapeAttr(h)}">${escapeHtml(h)}</option>`));
+
+  $("colT").innerHTML = header.map(h=>`<option>${escapeHtml(h)}</option>`).join("");
+  $("colC").innerHTML = header.map(h=>`<option>${escapeHtml(h)}</option>`).join("");
+  $("colClock").innerHTML = opts.join("");
+  $("colGroup").innerHTML = opts.join("");
 }
 
-async function postNoCors(payload){
-  const url = ($("apiUrl").value || apiUrl).trim();
-  if(!url) throw new Error("Defina a URL do Web App.");
+function loadCurveFromSheet(){
+  const sheetName = $("sheet").value;
+  const hrow = Math.max(1, Number($("headerRow").value||1));
+  const colT = $("colT").value;
+  const colC = $("colC").value;
+  const colClock = $("colClock").value || "";
+  const colGroup = $("colGroup").value || "";
 
-  // no-cors: envia mas não deixa ler resposta
-  await fetch(url, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
+  const ws = wb.Sheets[sheetName];
+  const rows = XLSX.utils.sheet_to_json(ws, {header:1, raw:true, defval:""});
+  const header = (rows[hrow-1]||[]).map(h=>String(h).trim());
+
+  const ixT = header.indexOf(colT);
+  const ixC = header.indexOf(colC);
+  const ixClock = colClock ? header.indexOf(colClock) : -1;
+  const ixGroup = colGroup ? header.indexOf(colGroup) : -1;
+
+  if(ixT<0 || ixC<0) return setStatus("Selecione as colunas de Tempo e CO₂ corretamente.");
+
+  rawRows = rows.slice(hrow); // dados
+  series = [];
+  for(let i=0;i<rawRows.length;i++){
+    const r = rawRows[i];
+    const t = toNum(r[ixT]);
+    const c = toNum(r[ixC]);
+    if(!Number.isFinite(t) || !Number.isFinite(c)) continue;
+
+    const clock = ixClock>=0 ? r[ixClock] : "";
+    const group = ixGroup>=0 ? String(r[ixGroup]??"") : "";
+    series.push({t, c, clock, group, rowIndex:i});
+  }
+
+  // se tiver muitos grupos, você vai filtrar depois; por enquanto: usa tudo do grupo mais comum
+  const g = chooseDefaultGroup(series);
+  const s = g ? series.filter(p=>p.group===g) : series;
+  series = s.sort((a,b)=>a.t-b.t);
+
+  pill("ptsInfo", `${series.length} pontos`);
+  setStatus(g ? `Curva carregada (grupo: ${g}).` : "Curva carregada.");
+  drawChart();
+  resetFit();
+  saveProjectSnapshot();
+}
+
+function chooseDefaultGroup(arr){
+  const counts = new Map();
+  for(const p of arr){
+    const k=(p.group||"").trim();
+    if(!k) continue;
+    counts.set(k, (counts.get(k)||0)+1);
+  }
+  if(!counts.size) return "";
+  let best="", bestN=0;
+  for(const [k,n] of counts.entries()){
+    if(n>bestN){ best=k; bestN=n; }
+  }
+  return best;
+}
+
+/* ========= Plot ========= */
+function drawChart(fit=null){
+  const labels = series.map(p=>p.t);
+  const dataCO2 = series.map(p=>p.c);
+
+  const datasets = [{
+    label: "CO₂ (ppm)",
+    data: labels.map((t,i)=>({x:t, y:dataCO2[i]})),
+    pointRadius: 3,
+    showLine: false
+  }];
+
+  if(fit && Number.isFinite(fit.slope)){
+    const t0=fit.t_ini, tf=fit.t_fim;
+    const y0=fit.slope*t0 + fit.intercept;
+    const yf=fit.slope*tf + fit.intercept;
+    datasets.push({
+      label: `Reta (R²=${fit.r2.toFixed(4)})`,
+      data: [{x:t0,y:y0},{x:tf,y:yf}],
+      pointRadius: 0,
+      showLine: true,
+      borderWidth: 3
+    });
+  }
+
+  const ctx = $("chart").getContext("2d");
+  if(chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: "scatter",
+    data: { datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: { title:{display:true,text:"Tempo (s)"} },
+        y: { title:{display:true,text:"CO₂ (ppm)"} }
+      },
+      plugins: {
+        legend: { labels:{ color:"#eaf1ff"} }
+      }
+    }
   });
-
-  // se não deu exception, consideramos "enviado"
-  return { ok:true, sent:true };
 }
 
+/* ========= Regressão & R² ========= */
+function linearRegression(xy){
+  const n = xy.length;
+  const x = xy.map(p=>p.t);
+  const y = xy.map(p=>p.c);
+  const mx = x.reduce((a,b)=>a+b,0)/n;
+  const my = y.reduce((a,b)=>a+b,0)/n;
 
-async function savePoint(){
-  const url = $("url").value.trim();
-  const point = {
-    date: $("date").value,
-    hini: $("hini").value,
-    hfim: $("hfim").value,
-    t: Number($("t").value),
-    co2: Number($("co2").value),
-    obs: $("obs").value
+  let num=0, den=0;
+  for(let i=0;i<n;i++){ num += (x[i]-mx)*(y[i]-my); den += (x[i]-mx)*(x[i]-mx); }
+  const slope = den===0 ? NaN : num/den;
+  const intercept = my - slope*mx;
+
+  let ssTot=0, ssRes=0;
+  for(let i=0;i<n;i++){
+    const yhat = slope*x[i] + intercept;
+    ssTot += (y[i]-my)**2;
+    ssRes += (y[i]-yhat)**2;
+  }
+  const r2 = ssTot===0 ? NaN : 1 - ssRes/ssTot;
+  return {slope, intercept, r2, n};
+}
+
+$("btnAutoFit").addEventListener("click", ()=>{
+  if(series.length<5) return setStatus("Poucos pontos para ajustar.");
+  const wmin = Math.max(3, Number($("wmin").value||60));
+  const step = Math.max(1, Number($("step").value||5));
+  const tMin = series[0].t;
+  const tMax = series[series.length-1].t;
+
+  let best=null;
+  for(let t0=tMin; t0<=tMax; t0+=step){
+    for(let tf=t0+wmin; tf<=tMax; tf+=step){
+      const sub = series.filter(p=>p.t>=t0 && p.t<=tf);
+      if(sub.length<3) continue;
+      const reg = linearRegression(sub);
+      if(!Number.isFinite(reg.r2)) continue;
+      if(!best || reg.r2 > best.r2){
+        best = {...reg, t_ini:t0, t_fim:tf};
+      }
+    }
+  }
+  if(!best) return setStatus("Não achei janela válida.");
+  applyFit(best, "auto_R2max");
+  setStatus(`Auto-fit OK: R²=${best.r2.toFixed(4)} | janela=[${best.t_ini},${best.t_fim}] | n=${best.n}`);
+});
+
+$("btnManualFit").addEventListener("click", ()=>{
+  const t0 = toNum($("t0").value);
+  const tf = toNum($("tf").value);
+  if(!Number.isFinite(t0) || !Number.isFinite(tf) || tf<=t0) return setStatus("Intervalo manual inválido.");
+  const sub = series.filter(p=>p.t>=t0 && p.t<=tf);
+  if(sub.length<3) return setStatus("Menos de 3 pontos na janela.");
+  const reg = linearRegression(sub);
+  if(!Number.isFinite(reg.r2)) return setStatus("R² não calculável.");
+  applyFit({...reg, t_ini:t0, t_fim:tf}, "manual");
+  setStatus(`Manual OK: R²=${reg.r2.toFixed(4)} | n=${reg.n}`);
+});
+
+$("btnResetFit").addEventListener("click", resetFit);
+
+function resetFit(){
+  currentFit=null;
+  pill("fitInfo","sem ajuste");
+  $("k_r2").textContent="—";
+  $("k_slope").textContent="—";
+  $("k_win").textContent="—";
+  $("k_flux").textContent="—";
+  $("t0").value="";
+  $("tf").value="";
+  drawChart(null);
+}
+
+function applyFit(fit, metodo){
+  currentFit = {...fit, metodo};
+  pill("fitInfo", `${metodo} R²=${fit.r2.toFixed(4)}`);
+  $("k_r2").textContent = fit.r2.toFixed(4);
+  $("k_slope").textContent = fit.slope.toFixed(6);
+  $("k_win").textContent = `${fit.t_ini} – ${fit.t_fim}`;
+  $("t0").value = fit.t_ini;
+  $("tf").value = fit.t_fim;
+  drawChart(currentFit);
+  recalcFlux();
+}
+
+$("btnRecalcFlux").addEventListener("click", recalcFlux);
+
+function recalcFlux(){
+  if(!currentFit || !Number.isFinite(currentFit.slope)) return;
+  const slope = currentFit.slope; // ppm/s
+  const V = toNum($("V").value);
+  const A = toNum($("A").value);
+  const P = toNum($("P").value);
+  const T = toNum($("T").value);
+  if(![V,A,P,T].every(Number.isFinite) || V<=0 || A<=0 || P<=0) return;
+
+  const R = 8.314462618;      // J mol-1 K-1
+  const MCO2 = 44.0095;       // g/mol
+  const TK = T + 273.15;
+
+  // ppm = µmol/mol = 1e-6 mol/mol
+  // molar density: P/(R*T)
+  // mol fraction change per second: slope * 1e-6 / s
+  // mol/s in chamber: (slope*1e-6) * (P/(R*T)) * V
+  // flux mol/(m²*s): ... /A
+  // convert to mg/m²/h: *MCO2(g/mol)*1000(mg/g)*3600(s/h)
+  const flux_mg_m2_h = (slope*1e-6) * (P/(R*TK)) * (V/A) * (MCO2*1000) * 3600;
+
+  currentFit.flux = flux_mg_m2_h;
+  $("k_flux").textContent = Number.isFinite(flux_mg_m2_h) ? flux_mg_m2_h.toFixed(3) : "—";
+}
+
+/* ========= Resultados: salvar/exportar ========= */
+$("btnSaveResult").addEventListener("click", ()=>{
+  if(!currentFit) return setStatus("Faça um ajuste antes de salvar.");
+  const row = {
+    group: series[0]?.group || "",
+    metodo: currentFit.metodo || "",
+    slope_ppm_s: currentFit.slope,
+    intercept: currentFit.intercept,
+    r2: currentFit.r2,
+    n: currentFit.n,
+    t_ini: currentFit.t_ini,
+    t_fim: currentFit.t_fim,
+    flux_mg_m2_h: currentFit.flux ?? null,
+    V_m3: toNum($("V").value),
+    A_m2: toNum($("A").value),
+    P_Pa: toNum($("P").value),
+    T_C: toNum($("T").value),
+    obs: $("fitObs").value || "",
+    saved_at: new Date().toISOString()
   };
-  try{
-    setStatus("Salvando ponto no Sheets...");
-    const j = await post(url, {action:"appendPoint", point});
-    if(!j.ok) throw new Error(j.error || "falhou");
-    setStatus("Salvo ✅ (aba DB)");
-  }catch(e){
-    setStatus("Erro ao salvar: " + e.message + "\n(sem internet = não salva)");
+  results.push(row);
+  saveLocal("co2play_results_v1", results);
+  renderResults();
+  setStatusR("Resultado salvo ✅ (e fica no navegador). Exporte quando quiser.");
+});
+
+$("btnClearResults").addEventListener("click", ()=>{
+  if(!confirm("Limpar todos os resultados salvos no navegador?")) return;
+  results = [];
+  saveLocal("co2play_results_v1", results);
+  renderResults();
+  setStatusR("Resultados limpos.");
+});
+
+function renderResults(){
+  const tb = $("tblRes").querySelector("tbody");
+  tb.innerHTML="";
+  for(const r of results.slice().reverse()){
+    const tr=document.createElement("tr");
+    tr.innerHTML = `
+      <td>${escapeHtml(r.group||"")}</td>
+      <td>${fmt(r.slope_ppm_s,6)}</td>
+      <td>${fmt(r.r2,4)}</td>
+      <td>${fmt(r.t_ini,0)}</td>
+      <td>${fmt(r.t_fim,0)}</td>
+      <td>${fmt(r.flux_mg_m2_h,3)}</td>
+      <td>${fmt(r.V_m3,4)}</td>
+      <td>${fmt(r.A_m2,4)}</td>
+      <td>${fmt(r.P_Pa,0)}</td>
+      <td>${fmt(r.T_C,1)}</td>
+      <td>${escapeHtml(r.obs||"")}</td>
+    `;
+    tb.appendChild(tr);
   }
 }
 
-async function saveFit(){
-  const url = $("url").value.trim();
-  const fit = {
-    metodo: $("met").value,
-    n: Number($("n").value),
-    slope: Number($("slope").value),
-    intercept: Number($("intercept").value),
-    r2: Number($("r2").value),
-    t_ini: Number($("t0").value),
-    t_fim: Number($("tf").value),
-    obs: $("obsfit").value
+function fmt(v,d){
+  const n=Number(v);
+  if(!Number.isFinite(n)) return "";
+  return n.toFixed(d);
+}
+
+$("btnExportJSON").addEventListener("click", ()=>{
+  const blob = new Blob([JSON.stringify({results}, null, 2)], {type:"application/json"});
+  dlBlob(blob, `co2play_resultados_${stamp()}.json`);
+});
+
+$("btnExportCSV").addEventListener("click", ()=>{
+  if(!results.length) return;
+  const headers = Object.keys(results[0]);
+  const lines = [headers.join(",")].concat(results.map(r=>headers.map(h=>csvCell(r[h])).join(",")));
+  dlBlob(new Blob([lines.join("\n")], {type:"text/csv;charset=utf-8"}), `co2play_resultados_${stamp()}.csv`);
+});
+function csvCell(v){
+  const s = String(v??"");
+  if(/[,"\n]/.test(s)) return `"${s.replace(/"/g,'""')}"`;
+  return s;
+}
+
+$("btnExportXLSX").addEventListener("click", ()=>{
+  if(!results.length) return;
+  const ws = XLSX.utils.json_to_sheet(results);
+  const wb2 = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb2, ws, "RESULTADOS");
+  const out = XLSX.write(wb2, {bookType:"xlsx", type:"array"});
+  dlBlob(new Blob([out], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), `co2play_resultados_${stamp()}.xlsx`);
+});
+
+function stamp(){
+  const d=new Date();
+  const p=n=>String(n).padStart(2,"0");
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`;
+}
+
+/* ========= Projeto: salvar/recuperar ========= */
+$("btnProjectSave").addEventListener("click", ()=>{
+  const snap = buildProject();
+  const blob = new Blob([JSON.stringify(snap, null, 2)], {type:"application/json"});
+  dlBlob(blob, `co2play_projeto_${stamp()}.json`);
+});
+
+$("btnProjectLoad").addEventListener("click", ()=> $("projectFile").click());
+
+$("projectFile").addEventListener("change", async (ev)=>{
+  const f=ev.target.files?.[0];
+  if(!f) return;
+  const txt=await f.text();
+  const snap=JSON.parse(txt);
+  restoreProject(snap);
+  setStatus("Projeto importado. Agora carregue o Excel correspondente e clique Carregar curva.");
+});
+
+function buildProject(){
+  return {
+    version:"v1",
+    saved_at:new Date().toISOString(),
+    settings:{
+      headerRow: Number($("headerRow").value||1),
+      sheet: $("sheet").value || "",
+      colT: $("colT").value || "",
+      colC: $("colC").value || "",
+      colClock: $("colClock").value || "",
+      colGroup: $("colGroup").value || "",
+      wmin: Number($("wmin").value||60),
+      step: Number($("step").value||5),
+      V: Number($("V").value||0.01),
+      A: Number($("A").value||0.07),
+      P: Number($("P").value||101325),
+      T: Number($("T").value||25)
+    },
+    results
   };
-  try{
-    setStatus("Salvando ajuste no Sheets...");
-    const j = await post(url, {action:"appendFit", fit});
-    if(!j.ok) throw new Error(j.error || "falhou");
-    setStatus("Salvo ✅ (aba FITS)");
-  }catch(e){
-    setStatus("Erro ao salvar: " + e.message);
+}
+
+function saveProjectSnapshot(){
+  saveLocal(projectKey, buildProject());
+}
+
+function restoreProject(snap){
+  const s = snap?.settings || {};
+  $("headerRow").value = s.headerRow ?? 1;
+  $("wmin").value = s.wmin ?? 60;
+  $("step").value = s.step ?? 5;
+  $("V").value = s.V ?? 0.01;
+  $("A").value = s.A ?? 0.07;
+  $("P").value = s.P ?? 101325;
+  $("T").value = s.T ?? 25;
+
+  // sheet/cols depend do Excel carregado, então só guardamos
+  saveLocal(projectKey, snap);
+  if(Array.isArray(snap.results)){
+    results = snap.results;
+    saveLocal("co2play_results_v1", results);
+    renderResults();
   }
 }
 
-// default date
-$("date").value = new Date().toISOString().slice(0,10);
+/* ========= HTML escape ========= */
+function escapeHtml(s){
+  return String(s??"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+}
+function escapeAttr(s){ return escapeHtml(s).replace(/"/g,"&quot;"); }
+
+/* init */
+renderResults();
 </script>
 </body>
 </html>
