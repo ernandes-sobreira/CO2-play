@@ -82,14 +82,22 @@ async function ping(){
   }
 }
 
-async function post(url, payload){
-  const r = await fetch(url, {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
+async function postNoCors(payload){
+  const url = ($("apiUrl").value || apiUrl).trim();
+  if(!url) throw new Error("Defina a URL do Web App.");
+
+  // no-cors: envia mas não deixa ler resposta
+  await fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload)
   });
-  return r.json();
+
+  // se não deu exception, consideramos "enviado"
+  return { ok:true, sent:true };
 }
+
 
 async function savePoint(){
   const url = $("url").value.trim();
